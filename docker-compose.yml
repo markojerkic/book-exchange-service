@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  book-db:
+    image: postgres
+    container_name: book-db
+    environment:
+      - POSTGRES_USER=bookuser
+      - POSTGRES_PASSWORD=bookpassword
+      - POSTGRES_DB=bookdb
+      - PGDATA=/var/lib/postgresql/data/dbdata
+    ports:
+      - 5700:5432
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    restart: always
+volumes:
+  dbdata:
