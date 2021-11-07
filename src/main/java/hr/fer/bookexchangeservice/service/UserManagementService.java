@@ -1,6 +1,6 @@
 package hr.fer.bookexchangeservice.service;
 
-import hr.fer.bookexchangeservice.UserRepository;
+import hr.fer.bookexchangeservice.repository.UserRepository;
 import hr.fer.bookexchangeservice.exception.EmailAlreadyExistsException;
 import hr.fer.bookexchangeservice.exception.UsernameAlreadyExistsException;
 import hr.fer.bookexchangeservice.model.entity.UserDetail;

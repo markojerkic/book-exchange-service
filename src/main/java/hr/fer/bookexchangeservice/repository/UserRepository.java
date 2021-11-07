@@ -1,4 +1,4 @@
-package hr.fer.bookexchangeservice;
+package hr.fer.bookexchangeservice.repository;
 
 import hr.fer.bookexchangeservice.model.entity.UserDetail;
 import org.springframework.data.jpa.repository.JpaRepository;

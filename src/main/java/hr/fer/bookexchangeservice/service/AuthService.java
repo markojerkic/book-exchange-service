@@ -3,6 +3,7 @@ package hr.fer.bookexchangeservice.service;
 import hr.fer.bookexchangeservice.config.auth.JwtUtils;
 import hr.fer.bookexchangeservice.model.dto.JwtResponse;
 import hr.fer.bookexchangeservice.model.dto.LoginRequest;
+import hr.fer.bookexchangeservice.model.entity.UserDetail;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,5 +52,13 @@ public class AuthService {
 
         return new JwtResponse(this.jwtUtils.generateAccessToken(auth),
                 this.jwtUtils.generateRefreshToken(auth), username, roles);
+    }
+
+    /**
+     * Tries to find user by the bearer token
+     * @return UserDetail instance of logged in user
+     */
+    public UserDetail getCurrentUserDetail() {
+        return (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
