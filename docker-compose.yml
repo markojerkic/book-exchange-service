@@ -1,17 +1,35 @@
-version: '3.9'
+version: '3.1'
 services:
-  book-db:
+  book-exchange-service:
+    container_name: book-exchange-service
+    networks:
+      - book-exchange-network
+    image: markojerkic/book-exchange-service:latest
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - bookdb
+    environment:
+      - DB_HOST=bookdb
+  bookdb:
     image: postgres
-    container_name: book-db
+    container_name: bookdb
+    networks:
+      - book-exchange-network
     environment:
       - POSTGRES_USER=bookuser
       - POSTGRES_PASSWORD=bookpassword
       - POSTGRES_DB=bookdb
       - PGDATA=/var/lib/postgresql/data/dbdata
     ports:
-      - 5700:5432
+      - "5432:5432"
+      - "5700:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
     restart: always
 volumes:
   dbdata:
+networks:
+  book-exchange-network:
