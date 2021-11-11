@@ -1,6 +1,5 @@
 package hr.fer.bookexchangeservice.config;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +12,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("cors.origins")
+    @Value("${cors.origins}")
     private String origins;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins(this.origins);
+        registry.addMapping("/**");
     }
 }
 
