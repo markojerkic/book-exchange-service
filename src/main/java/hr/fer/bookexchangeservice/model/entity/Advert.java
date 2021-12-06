@@ -46,7 +46,11 @@ public class Advert {
     @NotNull
     private Book advertisedBook;
     @OneToMany
-    @JoinTable(name = "advert_images")
+    @JoinTable(
+            name = "advert_images",
+            joinColumns = @JoinColumn(name = "advert_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
     private List<Image> advertImages;
 
 }

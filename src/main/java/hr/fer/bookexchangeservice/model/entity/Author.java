@@ -28,9 +28,24 @@ public class Author {
     @Column
     private int yearOfDeath;
     @OneToMany
-    @JoinTable(name = "author_reviews")
+    @JoinTable(
+            name = "author_reviews",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "review_id")
+    )
     private List<Review> reviews;
     @OneToMany
-    @JoinTable(name = "author_images")
+    @JoinTable(
+            name = "author_images",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
     private List<Image> authorImages;
+    @ManyToMany
+    @JoinTable(
+            name = "auhthor_wrote_genre",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private List<Genre> authorsGenres;
 }

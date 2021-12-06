@@ -22,10 +22,8 @@ public class Genre {
     private String name;
     @Column
     private String description;
-    @ManyToMany
-    @JoinTable(name = "auhthor_wrote_genre")
+    @ManyToMany(mappedBy = "authorsGenres")
     private List<Author> authors;
-    @ManyToMany
-    @JoinTable(name = "book_is_in_genre")
+    @ManyToMany(mappedBy = "genres")
     private List<Book> books;
 }
