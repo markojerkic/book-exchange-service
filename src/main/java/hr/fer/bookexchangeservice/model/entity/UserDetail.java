@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -39,6 +40,9 @@ public class UserDetail implements UserDetails {
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    @OneToMany
+    @JoinTable(name = "user_reviews")
+    private List<Review> userReviews;
 
     @JsonIgnore
     @Override
