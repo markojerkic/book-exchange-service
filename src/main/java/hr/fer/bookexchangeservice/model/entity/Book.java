@@ -23,21 +23,21 @@ public class Book {
     @Column(unique = true)
     @NotNull
     private String ISBN;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "book_reviews",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "review_id")
     )
     private List<Review> reviews;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "book_is_in_genre",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     private List<Genre> genres;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "book_images",
             joinColumns = @JoinColumn(name = "book_id"),

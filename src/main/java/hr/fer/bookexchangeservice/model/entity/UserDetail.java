@@ -40,8 +40,9 @@ public class UserDetail implements UserDetails {
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_reviews")
+    @JsonIgnore
     private List<Review> userReviews;
 
     @JsonIgnore

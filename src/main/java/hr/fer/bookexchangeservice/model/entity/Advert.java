@@ -39,13 +39,13 @@ public class Advert {
     @Column
     @NotNull
     private AdvertStatus advertStatus;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @NotNull
     private UserDetail userCreated;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @NotNull
     private Book advertisedBook;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "advert_images",
             joinColumns = @JoinColumn(name = "advert_id"),

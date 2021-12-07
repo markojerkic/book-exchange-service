@@ -1,7 +1,6 @@
 package hr.fer.bookexchangeservice.model.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,11 +23,11 @@ public class Genre {
     @Column
     private String description;
     @ManyToMany(mappedBy = "authorsGenres",
-            fetch = FetchType.LAZY)
-    @JsonIgnore
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.MERGE)
     private List<Author> authors;
     @ManyToMany(mappedBy = "genres",
-            fetch = FetchType.LAZY)
-    @JsonIgnore
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.MERGE)
     private List<Book> books;
 }

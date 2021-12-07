@@ -1,5 +1,6 @@
 package hr.fer.bookexchangeservice.model.entity;
 
+import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.ImageFileExtension;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,9 @@ public class Image {
     )
     private UUID uuid;
     @Column
+    @NotNull
     private ImageFileExtension imageFileExtension;
     @Column
+    @NotNull
     private int imageOrder;
 }
