@@ -1,6 +1,8 @@
 package hr.fer.bookexchangeservice.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +17,7 @@ import java.util.List;
 @Entity
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
     @NotNull
@@ -23,6 +25,7 @@ public class Book {
     @Column(unique = true)
     @NotNull
     private String ISBN;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "book_reviews",
@@ -30,6 +33,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "review_id")
     )
     private List<Review> reviews;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "book_is_in_genre",
@@ -37,6 +41,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     private List<Genre> genres;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "book_images",
@@ -44,5 +49,13 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
     private List<Image> bookImages;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "author_wrote_book",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private Author bookAuthor;
 
 }

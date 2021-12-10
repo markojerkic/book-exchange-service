@@ -5,7 +5,10 @@ import hr.fer.bookexchangeservice.model.entity.Advert;
 import hr.fer.bookexchangeservice.model.entity.UserDetail;
 import hr.fer.bookexchangeservice.repository.AdvertRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.Date;
 import java.util.List;
@@ -27,5 +30,9 @@ public class AdvertService {
         advert.setLastModified(new Date());
 
         return this.advertRepository.save(advert);
+    }
+
+    public Page<Advert> getAdvertPage(Pageable pageable) {
+        return this.advertRepository.findAll(pageable);
     }
 }
