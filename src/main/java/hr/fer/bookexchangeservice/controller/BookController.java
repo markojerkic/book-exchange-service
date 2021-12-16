@@ -3,9 +3,7 @@ package hr.fer.bookexchangeservice.controller;
 import hr.fer.bookexchangeservice.model.entity.Book;
 import hr.fer.bookexchangeservice.service.BookService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +16,10 @@ public class BookController {
     @GetMapping("all")
     public List<Book> getALlBooks() {
         return this.bookService.getAllBooks();
+    }
+
+    @PostMapping
+    public Book saveBook(@RequestBody Book book) {
+        return this.bookService.saveBook(book);
     }
 }

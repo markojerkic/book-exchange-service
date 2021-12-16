@@ -1,8 +1,10 @@
 package hr.fer.bookexchangeservice.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +31,7 @@ public class Genre {
             fetch = FetchType.LAZY,
             cascade = CascadeType.MERGE)
     private List<Author> authors;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(mappedBy = "genres",
             fetch = FetchType.LAZY,
             cascade = CascadeType.MERGE)
