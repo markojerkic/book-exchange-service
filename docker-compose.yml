@@ -11,6 +11,7 @@ services:
       - 8080:8080
     environment:
       - DB_HOST=bookdb
+      - DB_PORT=5432
       #- CORS_ORIGINS=http://34.89.240.97:443
     depends_on:
       - bookdb
