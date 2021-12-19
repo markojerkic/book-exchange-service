@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -26,9 +27,9 @@ public class Author {
     private String lastName;
     @Column
     @NotNull
-    private int yearOfBirth;
+    private Date yearOfBirth;
     @Column
-    private int yearOfDeath;
+    private Date yearOfDeath;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(

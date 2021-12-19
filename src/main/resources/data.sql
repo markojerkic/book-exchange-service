@@ -1,14 +1,14 @@
 insert into author (first_name, last_name, year_of_birth, year_of_death)
-select 'Ivo', 'Andrić', 1892, 1975
+select 'Ivo', 'Andrić', to_date('1892', 'YYYY'), to_date('1975', 'YYYY')
 where not exists(select * from author where id = 1);
 insert into author (first_name, last_name, year_of_birth, year_of_death)
-select 'August', 'Šenoa', 1838, 1881
+select 'August', 'Šenoa', to_date('1838', 'YYYY'), to_date('1881', 'YYYY')
 where not exists(select * from author where id = 2);
 insert into author (first_name, last_name, year_of_birth, year_of_death)
-select 'Ivan', 'Raos', 1921, 1987
+select 'Ivan', 'Raos', to_date('1921', 'YYYY'), to_date('1987', 'YYYY')
 where not exists(select * from author where id = 3);
 insert into author (first_name, last_name, year_of_birth, year_of_death)
-select 'J.K.', 'Rowlling', 1965, 2050
+select 'J.K.', 'Rowlling', to_date('1965', 'YYYY'), null
 where not exists(select * from author where id = 4);
 
 insert into genre (name)
