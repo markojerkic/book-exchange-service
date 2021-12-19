@@ -56,6 +56,14 @@ select 'markojerkic266@gmail.com',
         '$2a$10$fGNcxTj9KTa3vCh88u6wPekXB99BCo7l3euBTuUdVZir72QFXggkq','marko'
 where not exists(select * from user_detail where id = 1);
 
+insert into user_roles (user_id, roles)
+select 1, 'USER'
+where not exists(select * from user_roles where user_id=1 and roles = 'USER');
+
+insert into user_roles (user_id, roles)
+select 1, 'ADMIN'
+where not exists(select * from user_roles where user_id=1 and roles = 'ADMIN');
+
 insert into advert (advert_status, advert_type, description,
                     last_modified, price, title, transaction_type,
                     advertised_book_id, user_created_id)

@@ -1,5 +1,6 @@
 package hr.fer.bookexchangeservice.service;
 
+import hr.fer.bookexchangeservice.model.constant.Role;
 import hr.fer.bookexchangeservice.repository.UserRepository;
 import hr.fer.bookexchangeservice.exception.EmailAlreadyExistsException;
 import hr.fer.bookexchangeservice.exception.UsernameAlreadyExistsException;
@@ -11,7 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +36,9 @@ public class UserManagementService implements UserDetailsService {
         if (this.userRepository.existsByUsername(user.getUsername())) {
             throw new UsernameAlreadyExistsException("Korisničko ime se već koristi");
         }
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.USER);
+        user.setRoles(roles);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         return this.userRepository.save(user);
     }
