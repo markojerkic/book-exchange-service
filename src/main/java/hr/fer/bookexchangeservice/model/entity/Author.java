@@ -49,7 +49,7 @@ public class Author {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
-            name = "auhthor_wrote_genre",
+            name = "author_wrote_genre",
             joinColumns = @JoinColumn(name = "author_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
