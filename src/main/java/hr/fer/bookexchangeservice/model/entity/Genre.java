@@ -26,7 +26,7 @@ public class Genre {
     private String name;
     @Column
     private String description;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(mappedBy = "authorsGenres",
             fetch = FetchType.LAZY,
             cascade = CascadeType.MERGE)
