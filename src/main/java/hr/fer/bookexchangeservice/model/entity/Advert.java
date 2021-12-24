@@ -1,7 +1,6 @@
 package hr.fer.bookexchangeservice.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;

@@ -1,10 +1,10 @@
 package hr.fer.bookexchangeservice.service;
 
-import hr.fer.bookexchangeservice.model.constant.Role;
-import hr.fer.bookexchangeservice.repository.UserRepository;
 import hr.fer.bookexchangeservice.exception.EmailAlreadyExistsException;
 import hr.fer.bookexchangeservice.exception.UsernameAlreadyExistsException;
+import hr.fer.bookexchangeservice.model.constant.Role;
 import hr.fer.bookexchangeservice.model.entity.UserDetail;
+import hr.fer.bookexchangeservice.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
