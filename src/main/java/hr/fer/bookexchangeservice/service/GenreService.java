@@ -6,6 +6,7 @@ import hr.fer.bookexchangeservice.repository.GenreRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class GenreService {
         return this.genreRepository.findById(id).orElseThrow(() -> new GenreNotFoundException("Žanr " + id + " nije pronađen"));
     }
 
+    @Secured("ROLE_ADMIN")
     public Genre updateById(Long id, Genre genre) {
         if (!this.genreRepository.existsById(id)) {
             throw new GenreNotFoundException("Žanr " + id + " nije pronađen");

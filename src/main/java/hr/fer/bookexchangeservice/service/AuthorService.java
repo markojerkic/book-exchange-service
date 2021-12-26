@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
@@ -58,9 +59,15 @@ public class AuthorService {
     }
 
     public Author getAuthorById(Long id) {
-        return this.authorRepository.findById(id).orElseThrow(() -> new AuthorNotFoundException("Autor " + id + " nije pronađen"));
+        Author author = this.authorRepository.findById(id)
+                .orElseThrow(() -> new AuthorNotFoundException("Autor " + id + " nije pronađen"));
+        author.getAuthorsGenres();
+        author.getAuthorImages();
+        author.getReviews();
+        return author;
     }
 
+    @Secured("ROLE_ADMIN")
     public Author updateById(Long id, Author author) {
         if (!this.authorRepository.existsById(id)) {
             throw new AuthorNotFoundException("Autor " + id + " nije pronađen");

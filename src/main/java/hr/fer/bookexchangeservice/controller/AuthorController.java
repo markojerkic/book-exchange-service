@@ -13,6 +13,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/author")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class AuthorController {
     private final AuthorService authorService;
 

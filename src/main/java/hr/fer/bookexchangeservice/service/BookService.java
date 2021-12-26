@@ -7,6 +7,7 @@ import hr.fer.bookexchangeservice.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class BookService {
         return this.bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Knjiga " + id + " ne postoji"));
     }
 
+    @Secured("ROLE_ADMIN")
     public Book updateById(Long id, Book book) {
         if (!this.bookRepository.existsById(id)) {
             throw new AuthorNotFoundException("Knjiga " + id + " nije pronađena");

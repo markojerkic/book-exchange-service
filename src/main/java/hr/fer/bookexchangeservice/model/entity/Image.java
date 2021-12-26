@@ -1,5 +1,6 @@
 package hr.fer.bookexchangeservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.ImageFileExtension;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 public class Image {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(

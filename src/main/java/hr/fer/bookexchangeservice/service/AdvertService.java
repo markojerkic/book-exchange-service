@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
@@ -82,6 +83,7 @@ public class AdvertService {
         return this.advertRepository.findById(id).orElseThrow(() -> new AdvertNotFoundException("Oglas " + id + " nije pronađen"));
     }
 
+    @Secured("ROLE_ADMIN")
     public Advert updateById(Long id, Advert advert) {
         if (!this.advertRepository.existsById(id)) {
             throw new AdvertNotFoundException("Oglas " + id + " nije pronađen");

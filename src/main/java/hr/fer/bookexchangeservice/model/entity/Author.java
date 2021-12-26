@@ -1,6 +1,7 @@
 package hr.fer.bookexchangeservice.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Author {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,24 +31,24 @@ public class Author {
     private Date yearOfBirth;
     @Column
     private Date yearOfDeath;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "author_reviews",
             joinColumns = @JoinColumn(name = "author_id"),
             inverseJoinColumns = @JoinColumn(name = "review_id")
     )
     private List<Review> reviews;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+     
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "author_images",
             joinColumns = @JoinColumn(name = "author_id"),
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
     private List<Image> authorImages;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "author_wrote_genre",
             joinColumns = @JoinColumn(name = "author_id"),

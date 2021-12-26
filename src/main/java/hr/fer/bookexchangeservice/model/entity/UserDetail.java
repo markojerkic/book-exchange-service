@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Entity
 public class UserDetail implements UserDetails {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -52,6 +53,7 @@ public class UserDetail implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "review_id")
     )
     private List<Review> userReviews;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @NotNull
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
