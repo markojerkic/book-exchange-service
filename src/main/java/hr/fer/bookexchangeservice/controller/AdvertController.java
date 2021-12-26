@@ -15,6 +15,7 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/advert")
+@CrossOrigin("*")
 public class AdvertController {
     private final AdvertService advertService;
 
