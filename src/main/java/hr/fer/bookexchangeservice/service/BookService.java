@@ -1,5 +1,7 @@
 package hr.fer.bookexchangeservice.service;
 
+import hr.fer.bookexchangeservice.exception.AuthorNotFoundException;
+import hr.fer.bookexchangeservice.exception.BookNotFoundException;
 import hr.fer.bookexchangeservice.model.entity.Book;
 import hr.fer.bookexchangeservice.repository.BookRepository;
 import lombok.AllArgsConstructor;
@@ -24,5 +26,17 @@ public class BookService {
 
     public Page<Book> getPagedBooks(Pageable pageable) {
         return this.bookRepository.findAll(pageable);
+    }
+
+    public Book getBookById(Long id) {
+        return this.bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Knjiga " + id + " ne postoji"));
+    }
+
+    public Book updateById(Long id, Book book) {
+        if (!this.bookRepository.existsById(id)) {
+            throw new AuthorNotFoundException("Knjiga " + id + " nije pronađena");
+        }
+        book.setId(id);
+        return this.bookRepository.save(book);
     }
 }

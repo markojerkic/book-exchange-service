@@ -21,6 +21,16 @@ public class AuthorController {
         return this.authorService.getAllAuthors();
     }
 
+    @GetMapping("{id}")
+    public Author getAuthorById(@PathVariable Long id) {
+        return this.authorService.getAuthorById(id);
+    }
+
+    @PatchMapping("{id}")
+    public Author updateAdvert(@PathVariable Long id, @RequestBody Author author) {
+        return this.authorService.updateById(id, author);
+    }
+
     @GetMapping
     public Page<Author> getPagedAuthors(Pageable pageable, @RequestParam Optional<String> firstName,
                                         @RequestParam Optional<String> lastName,

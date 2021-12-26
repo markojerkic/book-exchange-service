@@ -20,6 +20,16 @@ public class GenreController {
         return this.genreService.getAllGenres();
     }
 
+    @GetMapping("{id}")
+    public Genre getGenreById(@PathVariable Long id) {
+        return this.genreService.getGenreById(id);
+    }
+
+    @PatchMapping("{id}")
+    public Genre updateGenre(@PathVariable Long id, @RequestBody Genre genre) {
+        return this.genreService.updateById(id, genre);
+    }
+
     @GetMapping
     public Page<Genre> getPagedGenres(Pageable pageable) {
         return this.genreService.getPagedGenres(pageable);

@@ -1,5 +1,6 @@
 package hr.fer.bookexchangeservice.service;
 
+import hr.fer.bookexchangeservice.exception.GenreNotFoundException;
 import hr.fer.bookexchangeservice.model.entity.Genre;
 import hr.fer.bookexchangeservice.repository.GenreRepository;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,17 @@ public class GenreService {
 
     public Page<Genre> getPagedGenres(Pageable pageable) {
         return this.genreRepository.findAll(pageable);
+    }
+
+    public Genre getGenreById(Long id) {
+        return this.genreRepository.findById(id).orElseThrow(() -> new GenreNotFoundException("Žanr " + id + " nije pronađen"));
+    }
+
+    public Genre updateById(Long id, Genre genre) {
+        if (!this.genreRepository.existsById(id)) {
+            throw new GenreNotFoundException("Žanr " + id + " nije pronađen");
+        }
+        genre.setId(id);
+        return this.genreRepository.save(genre);
     }
 }

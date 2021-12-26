@@ -23,6 +23,16 @@ public class AdvertController {
         return this.advertService.getAllAdverts();
     }
 
+    @GetMapping("{id}")
+    public Advert getAdvertById(@PathVariable Long id) {
+        return this.advertService.getAdvertById(id);
+    }
+
+    @PatchMapping("{id}")
+    public Advert updateAdvert(@PathVariable Long id, @RequestBody Advert advert) {
+        return this.advertService.updateById(id, advert);
+    }
+
     @PostMapping
     public Advert saveAdvert(@RequestBody Advert advert) {
         return this.advertService.saveAdvert(advert);

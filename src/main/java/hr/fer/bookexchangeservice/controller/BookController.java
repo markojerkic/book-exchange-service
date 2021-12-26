@@ -20,6 +20,16 @@ public class BookController {
         return this.bookService.getAllBooks();
     }
 
+    @GetMapping("{id}")
+    public Book getBookById(@PathVariable Long id) {
+        return this.bookService.getBookById(id);
+    }
+
+    @PatchMapping("{id}")
+    public Book updateBook(@PathVariable Long id, @RequestBody Book book) {
+        return this.bookService.updateById(id, book);
+    }
+
     @GetMapping
     public Page<Book> getPagedAuthors(Pageable pageable) {
         return this.bookService.getPagedBooks(pageable);

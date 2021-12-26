@@ -1,5 +1,6 @@
 package hr.fer.bookexchangeservice.service;
 
+import hr.fer.bookexchangeservice.exception.AuthorNotFoundException;
 import hr.fer.bookexchangeservice.model.entity.Author;
 import hr.fer.bookexchangeservice.repository.AuthorRepository;
 import lombok.AllArgsConstructor;
@@ -54,5 +55,17 @@ public class AuthorService {
                     .greaterThanOrEqualTo(root.get("yearOfDeath"), year))));*/
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
+    }
+
+    public Author getAuthorById(Long id) {
+        return this.authorRepository.findById(id).orElseThrow(() -> new AuthorNotFoundException("Autor " + id + " nije pronađen"));
+    }
+
+    public Author updateById(Long id, Author author) {
+        if (!this.authorRepository.existsById(id)) {
+            throw new AuthorNotFoundException("Autor " + id + " nije pronađen");
+        }
+        author.setId(id);
+        return this.authorRepository.save(author);
     }
 }

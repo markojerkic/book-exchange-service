@@ -1,5 +1,6 @@
 package hr.fer.bookexchangeservice.service;
 
+import hr.fer.bookexchangeservice.exception.AdvertNotFoundException;
 import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
 import hr.fer.bookexchangeservice.model.constant.TransactionType;
@@ -75,5 +76,17 @@ public class AdvertService {
                             "%" + s + "%"))));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
+    }
+
+    public Advert getAdvertById(Long id) {
+        return this.advertRepository.findById(id).orElseThrow(() -> new AdvertNotFoundException("Oglas " + id + " nije pronađen"));
+    }
+
+    public Advert updateById(Long id, Advert advert) {
+        if (!this.advertRepository.existsById(id)) {
+            throw new AdvertNotFoundException("Oglas " + id + " nije pronađen");
+        }
+        advert.setId(id);
+        return this.advertRepository.save(advert);
     }
 }
