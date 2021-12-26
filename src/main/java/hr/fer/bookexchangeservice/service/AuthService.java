@@ -8,12 +8,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -36,8 +38,8 @@ public class AuthService {
         String refreshToken = this.jwtUtils.generateRefreshToken(auth);
 
         UserDetails user = (UserDetails) auth.getPrincipal();
-        List<String> roles = Arrays.asList("ROLE_USER");
-        return new JwtResponse(accessToken, refreshToken, user.getUsername(), roles);
+        return new JwtResponse(accessToken, refreshToken, user.getUsername(), user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
     }
 
     public JwtResponse refreshToken(String refreshToken) {
@@ -48,10 +50,10 @@ public class AuthService {
         UserDetails user = this.userManagementService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null,
                 user.getAuthorities());
-        List<String> roles = Arrays.asList("ROLE_USER");
 
         return new JwtResponse(this.jwtUtils.generateAccessToken(auth),
-                this.jwtUtils.generateRefreshToken(auth), username, roles);
+                this.jwtUtils.generateRefreshToken(auth), username, user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
     }
 
     /**
