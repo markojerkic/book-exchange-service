@@ -1,17 +1,18 @@
 package hr.fer.bookexchangeservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Review {
 
@@ -23,17 +24,14 @@ public class Review {
     private int reviewGrade;
     @Column
     private String description;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Review review = (Review) o;
-        return id != null && Objects.equals(id, review.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Author author;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "book_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Book book;
 }

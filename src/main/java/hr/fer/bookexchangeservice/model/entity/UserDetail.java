@@ -47,7 +47,8 @@ public class UserDetail implements UserDetails {
     private String password;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "user_reviews",
             joinColumns = @JoinColumn(name = "user_id"),

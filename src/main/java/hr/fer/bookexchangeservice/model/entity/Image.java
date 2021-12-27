@@ -1,23 +1,21 @@
 package hr.fer.bookexchangeservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.ImageFileExtension;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.Hibernate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Objects;
 import java.util.UUID;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Image {
 
@@ -35,17 +33,19 @@ public class Image {
     @Column
     @NotNull
     private int imageOrder;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Image image = (Image) o;
-        return uuid != null && Objects.equals(uuid, image.uuid);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "author")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Author author;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Advert advert;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "book_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Book book;
 }

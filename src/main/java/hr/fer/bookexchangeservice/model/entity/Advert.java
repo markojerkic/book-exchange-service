@@ -5,18 +5,19 @@ import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
 import hr.fer.bookexchangeservice.model.constant.TransactionType;
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Advert {
 
@@ -46,35 +47,18 @@ public class Advert {
     @Enumerated(EnumType.STRING)
     private AdvertStatus advertStatus;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
-    @ToString.Exclude
     private UserDetail userCreated;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
-    @ToString.Exclude
     private Book advertisedBook;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval=true)
-    @JoinTable(
-            name = "advert_images",
-            joinColumns = @JoinColumn(name = "advert_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    @ToString.Exclude
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "advert")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Image> advertImages;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Advert advert = (Advert) o;
-        return id != null && Objects.equals(id, advert.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }
