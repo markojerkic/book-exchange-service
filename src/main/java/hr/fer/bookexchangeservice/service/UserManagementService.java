@@ -45,15 +45,6 @@ public class UserManagementService implements UserDetailsService {
     }
 
     /**
-     * Return a list of all existing users saved in the database
-     *
-     * @return List of all users in the database
-     */
-    public List<UserDetail> getAllUsers() {
-        return this.userRepository.findAll();
-    }
-
-    /**
      * Searches the database for user with the given username.
      *
      * @param username Unique username by which the database is queried
