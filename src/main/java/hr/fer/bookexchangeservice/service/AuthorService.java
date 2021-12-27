@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -37,7 +40,6 @@ public class AuthorService {
     private Specification<Author> createQuerySpecification(Optional<String> firstName,
                                                            Optional<String> lastName, Optional<Long> yearOfBirth,
                                                            Optional<Long> yearOfDeath) {
-        Calendar cal = Calendar.getInstance();
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             firstName.ifPresent(name -> predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("firstName")),
@@ -50,10 +52,6 @@ public class AuthorService {
             yearOfDeath.ifPresent(year -> predicates.add(criteriaBuilder.equal(criteriaBuilder.function("YEAR",
                             Integer.class, root.get("yearOfDeath")),
                     (new Date(year)).toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear())));
-            /*yearOfBirth.ifPresent(year -> predicates.add(criteriaBuilder.and(criteriaBuilder
-                    .greaterThanOrEqualTo(root.get("yearOfBirth"), year))));
-            yearOfDeath.ifPresent(year -> predicates.add(criteriaBuilder.and(criteriaBuilder
-                    .greaterThanOrEqualTo(root.get("yearOfDeath"), year))));*/
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
@@ -61,9 +59,6 @@ public class AuthorService {
     public Author getAuthorById(Long id) {
         Author author = this.authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Autor " + id + " nije pronađen"));
-        author.getAuthorsGenres();
-        author.getAuthorImages();
-        author.getReviews();
         return author;
     }
 

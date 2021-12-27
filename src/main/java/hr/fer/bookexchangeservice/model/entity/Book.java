@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Book {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;

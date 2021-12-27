@@ -19,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 public class Image {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(

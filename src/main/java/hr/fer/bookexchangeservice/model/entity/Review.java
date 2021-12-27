@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 public class Review {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
