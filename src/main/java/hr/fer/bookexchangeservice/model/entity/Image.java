@@ -34,17 +34,17 @@ public class Image {
     @NotNull
     private int imageOrder;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Author author;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Advert advert;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Book book;

@@ -47,17 +47,17 @@ public class Advert {
     @Enumerated(EnumType.STRING)
     private AdvertStatus advertStatus;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private UserDetail userCreated;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private Book advertisedBook;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "advert")
+    @OneToMany(orphanRemoval = true, mappedBy = "advert")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Image> advertImages;
 

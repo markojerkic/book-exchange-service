@@ -28,7 +28,7 @@ public class Book {
     @NotNull
     private String ISBN;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY,
             mappedBy = "book")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Review> reviews;
@@ -39,13 +39,14 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Genre> genres;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "book")
+    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "book")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Image> bookImages;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_author_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Author bookAuthor;

@@ -32,10 +32,10 @@ public class Author {
     private Date yearOfBirth;
     @Column
     private Date yearOfDeath;
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "author")
+    @OneToMany(orphanRemoval = true, mappedBy = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Review> reviews;
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "author")
+    @OneToMany(orphanRemoval = true, mappedBy = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Image> authorImages;
     @ManyToMany
@@ -46,7 +46,7 @@ public class Author {
     )
     private List<Genre> authorsGenres;
     @JsonIgnore
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "bookAuthor")
+    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "bookAuthor")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Book> books;
 }

@@ -7,6 +7,8 @@ import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.Role;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,13 +49,9 @@ public class UserDetail implements UserDetails {
     private String password;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonIgnore
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinTable(
-            name = "user_reviews",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "review_id")
-    )
+    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY,
+            mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<Review> userReviews;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
