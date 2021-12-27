@@ -1,7 +1,5 @@
 package hr.fer.bookexchangeservice.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +29,7 @@ public class Author {
     private Date yearOfBirth;
     @Column
     private Date yearOfDeath;
-    
+
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "author_reviews",
@@ -39,7 +37,7 @@ public class Author {
             inverseJoinColumns = @JoinColumn(name = "review_id")
     )
     private List<Review> reviews;
-     
+
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "author_images",
@@ -47,7 +45,7 @@ public class Author {
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
     private List<Image> authorImages;
-    
+
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "author_wrote_genre",

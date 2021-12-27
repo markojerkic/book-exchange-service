@@ -13,8 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +24,7 @@ public class AuthService {
 
     /**
      * Check credentials. Builds JWT access and refresh tokens.
+     *
      * @param loginRequest Contains credentials: username and password
      * @return Response containing JWT access and refresh tokens and username
      */
@@ -58,6 +57,7 @@ public class AuthService {
 
     /**
      * Tries to find user by the bearer token
+     *
      * @return UserDetail instance of logged in user
      */
     public UserDetail getCurrentUserDetail() {

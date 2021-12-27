@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface AdvertRepository extends PagingAndSortingRepository<Advert, Long>, JpaSpecificationExecutor<Advert>,
-                                            JpaRepository<Advert, Long>{
+        JpaRepository<Advert, Long> {
 }

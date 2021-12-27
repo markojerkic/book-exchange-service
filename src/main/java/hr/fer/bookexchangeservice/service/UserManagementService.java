@@ -26,6 +26,7 @@ public class UserManagementService implements UserDetailsService {
     /**
      * Save new user. User's password will be hashed upon saving in database.
      * If id is null, then the repository will create a new user.
+     *
      * @param user Data that will be saved in repo
      * @return Saved user
      */
@@ -45,6 +46,7 @@ public class UserManagementService implements UserDetailsService {
 
     /**
      * Return a list of all existing users saved in the database
+     *
      * @return List of all users in the database
      */
     public List<UserDetail> getAllUsers() {
@@ -53,6 +55,7 @@ public class UserManagementService implements UserDetailsService {
 
     /**
      * Searches the database for user with the given username.
+     *
      * @param username Unique username by which the database is queried
      * @return UserDetails class with data of the user with the given username
      * @throws UsernameNotFoundException Throws if database does not contain user with the username

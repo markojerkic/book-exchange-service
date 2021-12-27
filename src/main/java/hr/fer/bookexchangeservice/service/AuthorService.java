@@ -47,7 +47,7 @@ public class AuthorService {
             lastName.ifPresent(name -> predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("lastName")),
                     "%" + name.toUpperCase() + "%")));
             yearOfBirth.ifPresent(year -> predicates.add(criteriaBuilder.equal(criteriaBuilder.function("YEAR",
-                    Integer.class, root.get("yearOfBirth")),
+                            Integer.class, root.get("yearOfBirth")),
                     (new Date(year)).toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear())));
             yearOfDeath.ifPresent(year -> predicates.add(criteriaBuilder.equal(criteriaBuilder.function("YEAR",
                             Integer.class, root.get("yearOfDeath")),
