@@ -52,7 +52,7 @@ public class UserDetail implements UserDetails {
     private String password;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonIgnore
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY,
+    @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude

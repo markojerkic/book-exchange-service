@@ -32,8 +32,6 @@ public class Genre {
     private List<Author> authors;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(mappedBy = "genres",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+            fetch = FetchType.LAZY)
     private List<Book> books;
 }

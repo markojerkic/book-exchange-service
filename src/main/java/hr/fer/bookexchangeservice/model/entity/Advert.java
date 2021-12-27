@@ -57,7 +57,7 @@ public class Advert {
     @NotNull
     private Book advertisedBook;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(orphanRemoval = true, mappedBy = "advert")
+    @OneToMany(mappedBy = "advert")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Image> advertImages;
 

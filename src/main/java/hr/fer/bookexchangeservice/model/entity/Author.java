@@ -32,21 +32,29 @@ public class Author {
     private Date yearOfBirth;
     @Column
     private Date yearOfDeath;
-    @OneToMany(orphanRemoval = true, mappedBy = "author")
+    @OneToMany(mappedBy = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Review> reviews;
-    @OneToMany(orphanRemoval = true, mappedBy = "author")
+    @OneToMany(mappedBy = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Image> authorImages;
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
             name = "author_wrote_genre",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id")
+            joinColumns = @JoinColumn(name = "author_id",
+                    foreignKey = @ForeignKey(name = "genre_author_id_fk",
+                            value = ConstraintMode.CONSTRAINT,
+                            foreignKeyDefinition = "foreign key (author_id) references author\n" +
+                                    "on delete cascade")),
+            inverseJoinColumns = @JoinColumn(name = "genre_id",
+                    foreignKey = @ForeignKey(name = "author_genre_id_fk",
+                            value = ConstraintMode.CONSTRAINT,
+                            foreignKeyDefinition = "foreign key (genre_id) references genre\n" +
+                                    "on delete cascade"))
     )
     private List<Genre> authorsGenres;
     @JsonIgnore
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "bookAuthor")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bookAuthor")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Book> books;
 }

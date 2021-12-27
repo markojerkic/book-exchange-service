@@ -28,7 +28,7 @@ public class Book {
     @NotNull
     private String ISBN;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY,
+    @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "book")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Review> reviews;
@@ -36,13 +36,20 @@ public class Book {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_is_in_genre",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id")
+            joinColumns = @JoinColumn(name = "book_id",
+                    foreignKey = @ForeignKey(name = "book_genre_id_fk",
+                            value = ConstraintMode.CONSTRAINT,
+                    foreignKeyDefinition = "foreign key (book_id) references book\n" +
+                            "on delete cascade")),
+            inverseJoinColumns = @JoinColumn(name = "genre_id",
+                    foreignKey = @ForeignKey(name = "genre_book_id_fk",
+                            value = ConstraintMode.CONSTRAINT,
+                            foreignKeyDefinition = "foreign key (genre_id) references genre\n" +
+                                    "on delete cascade"))
     )
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Genre> genres;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "book")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Image> bookImages;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
