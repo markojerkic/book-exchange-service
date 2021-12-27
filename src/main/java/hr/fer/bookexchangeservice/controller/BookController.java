@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/book")
@@ -32,8 +33,10 @@ public class BookController {
     }
 
     @GetMapping
-    public Page<Book> getPagedAuthors(Pageable pageable) {
-        return this.bookService.getPagedBooks(pageable);
+    public Page<Book> getPagedAuthors(Pageable pageable, @RequestParam Optional<String> title,
+                                      @RequestParam Optional<String> isbn,
+                                      @RequestParam Optional<Long> author) {
+        return this.bookService.getPagedBooks(pageable, title, isbn, author);
     }
 
     @PostMapping

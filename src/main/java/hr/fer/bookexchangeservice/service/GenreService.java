@@ -6,10 +6,14 @@ import hr.fer.bookexchangeservice.repository.GenreRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,8 +28,21 @@ public class GenreService {
         return this.genreRepository.save(genre);
     }
 
-    public Page<Genre> getPagedGenres(Pageable pageable) {
-        return this.genreRepository.findAll(pageable);
+    public Page<Genre> getPagedGenres(Pageable pageable, Optional<String> name,
+                                      Optional<String> description) {
+        return this.genreRepository.findAll(this.createQuerySpecification(name, description), pageable);
+    }
+
+    private Specification<Genre> createQuerySpecification(Optional<String> name,
+                                                         Optional<String> description) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            name.ifPresent(n -> predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("name")),
+                    "%" + n.toUpperCase() + "%")));
+            description.ifPresent(d -> predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("description")),
+                    "%" + d.toUpperCase() + "%")));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
     }
 
     public Genre getGenreById(Long id) {

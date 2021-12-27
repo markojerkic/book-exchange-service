@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/genre")
@@ -32,8 +33,9 @@ public class GenreController {
     }
 
     @GetMapping
-    public Page<Genre> getPagedGenres(Pageable pageable) {
-        return this.genreService.getPagedGenres(pageable);
+    public Page<Genre> getPagedGenres(Pageable pageable, @RequestParam Optional<String> name,
+                                      @RequestParam Optional<String> description) {
+        return this.genreService.getPagedGenres(pageable, name, description);
     }
 
     @PostMapping

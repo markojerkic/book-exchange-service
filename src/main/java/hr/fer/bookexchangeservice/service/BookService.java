@@ -1,16 +1,19 @@
 package hr.fer.bookexchangeservice.service;
 
-import hr.fer.bookexchangeservice.exception.AuthorNotFoundException;
 import hr.fer.bookexchangeservice.exception.BookNotFoundException;
 import hr.fer.bookexchangeservice.model.entity.Book;
 import hr.fer.bookexchangeservice.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -31,8 +34,23 @@ public class BookService {
         this.bookRepository.deleteById(id);
     }
 
-    public Page<Book> getPagedBooks(Pageable pageable) {
-        return this.bookRepository.findAll(pageable);
+    public Page<Book> getPagedBooks(Pageable pageable, Optional<String> title, 
+                                    Optional<String> isbn, Optional<Long> author) {
+        return this.bookRepository.findAll(this.createQuerySpecification(title, isbn, author), pageable);
+    }
+
+    private Specification<Book> createQuerySpecification(Optional<String> title,
+                                                         Optional<String> isbn, Optional<Long> author) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            title.ifPresent(t -> predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("title")),
+                    "%" + t.toUpperCase() + "%")));
+            isbn.ifPresent(isb -> predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("title")),
+                    "%" + isb.toUpperCase() + "%")));
+            author.ifPresent(authorId -> predicates.add(criteriaBuilder.equal(root.get("bookAuthor")
+                    .get("id"), authorId)));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
     }
 
     public Book getBookById(Long id) {
@@ -48,7 +66,7 @@ public class BookService {
 
     private void assertExists(Long id) {
         if (!this.bookRepository.existsById(id)) {
-            throw new AuthorNotFoundException("Knjiga " + id + " nije pronađena");
+            throw new BookNotFoundException("Knjiga " + id + " nije pronađena");
         }
     }
 }
