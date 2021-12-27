@@ -35,12 +35,12 @@ public class Image {
     private int imageOrder;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Author author;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "advert_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Advert advert;
     @JsonIgnore
