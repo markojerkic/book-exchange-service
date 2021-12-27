@@ -50,7 +50,7 @@ public class Book {
     )
     private List<Image> bookImages;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "author_wrote_book",
             joinColumns = @JoinColumn(name = "book_id"),
