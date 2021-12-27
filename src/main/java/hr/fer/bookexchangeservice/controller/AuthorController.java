@@ -44,4 +44,9 @@ public class AuthorController {
     public Author saveAuthor(@RequestBody Author author) {
         return this.authorService.saveAuthor(author);
     }
+
+    @DeleteMapping("{id}")
+    public void deleteAuthorById(@PathVariable Long id) {
+        this.authorService.deleteAuthor(id);
+    }
 }

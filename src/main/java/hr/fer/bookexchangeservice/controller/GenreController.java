@@ -40,4 +40,9 @@ public class GenreController {
     public Genre saveGenre(@RequestBody Genre genre) {
         return this.genreService.saveGenre(genre);
     }
+
+    @DeleteMapping("{id}")
+    public void deleteGenreById(@PathVariable Long id) {
+        this.genreService.deleteGenre(id);
+    }
 }

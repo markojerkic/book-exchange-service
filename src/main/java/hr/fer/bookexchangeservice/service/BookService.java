@@ -25,6 +25,12 @@ public class BookService {
         return this.bookRepository.save(book);
     }
 
+    @Secured("ROLE_ADMIN")
+    public void deleteBook(Long id) {
+        this.assertExists(id);
+        this.bookRepository.deleteById(id);
+    }
+
     public Page<Book> getPagedBooks(Pageable pageable) {
         return this.bookRepository.findAll(pageable);
     }
@@ -35,10 +41,14 @@ public class BookService {
 
     @Secured("ROLE_ADMIN")
     public Book updateById(Long id, Book book) {
+        this.assertExists(id);
+        book.setId(id);
+        return this.bookRepository.save(book);
+    }
+
+    private void assertExists(Long id) {
         if (!this.bookRepository.existsById(id)) {
             throw new AuthorNotFoundException("Knjiga " + id + " nije pronađena");
         }
-        book.setId(id);
-        return this.bookRepository.save(book);
     }
 }

@@ -30,6 +30,12 @@ public class AuthorService {
         return this.authorRepository.save(author);
     }
 
+    @Secured("ROLE_ADMIN")
+    public void deleteAuthor(Long id) {
+        this.assertExists(id);
+        this.authorRepository.deleteById(id);
+    }
+
     public Page<Author> getPagedAuthors(Pageable pageable, Optional<String> firstName,
                                         Optional<String> lastName, Optional<Long> yearOfBirth,
                                         Optional<Long> yearOfDeath) {
@@ -57,17 +63,20 @@ public class AuthorService {
     }
 
     public Author getAuthorById(Long id) {
-        Author author = this.authorRepository.findById(id)
+        return this.authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Autor " + id + " nije pronađen"));
-        return author;
     }
 
     @Secured("ROLE_ADMIN")
     public Author updateById(Long id, Author author) {
+        this.assertExists(id);
+        author.setId(id);
+        return this.authorRepository.save(author);
+    }
+
+    public void assertExists(Long id) {
         if (!this.authorRepository.existsById(id)) {
             throw new AuthorNotFoundException("Autor " + id + " nije pronađen");
         }
-        author.setId(id);
-        return this.authorRepository.save(author);
     }
 }

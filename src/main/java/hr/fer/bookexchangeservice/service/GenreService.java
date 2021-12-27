@@ -34,10 +34,20 @@ public class GenreService {
 
     @Secured("ROLE_ADMIN")
     public Genre updateById(Long id, Genre genre) {
+        this.assertExists(id);
+        genre.setId(id);
+        return this.genreRepository.save(genre);
+    }
+
+    @Secured("ROLE_ADMIN")
+    public void deleteGenre(Long id) {
+        this.assertExists(id);
+        this.genreRepository.deleteById(id);
+    }
+
+    private void assertExists(Long id) {
         if (!this.genreRepository.existsById(id)) {
             throw new GenreNotFoundException("Žanr " + id + " nije pronađen");
         }
-        genre.setId(id);
-        return this.genreRepository.save(genre);
     }
 }
