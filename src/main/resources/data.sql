@@ -67,8 +67,8 @@ where not exists(select * from user_roles where user_id=1 and roles = 'ADMIN');
 insert into advert (advert_status, advert_type, description,
                     last_modified, price, title, transaction_type,
                     advertised_book_id, user_created_id)
-select 0, 1, 'Jako dobro očuvano. Super štivo. Preporučam svima',
+select 'ACTIVE', 'LOOKING', 'Jako dobro očuvano. Super štivo. Preporučam svima',
         now(), 50,
-        'Jako dobro očuvana "Na drini ćuprija"', 0, 1, 1
+        'Jako dobro očuvana "Na drini ćuprija"', 'BUY', 1, 1
 where not exists(select * from advert where id = 1);
 

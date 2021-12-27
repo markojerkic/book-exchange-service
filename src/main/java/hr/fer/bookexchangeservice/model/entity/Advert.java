@@ -34,12 +34,15 @@ public class Advert {
     private Float price;
     @Column
     @NotNull
+    @Enumerated(EnumType.STRING)
     private AdvertType advertType;
     @Column
     @NotNull
+    @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
     @Column
     @NotNull
+    @Enumerated(EnumType.STRING)
     private AdvertStatus advertStatus;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
