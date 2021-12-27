@@ -1,6 +1,7 @@
 package hr.fer.bookexchangeservice.service;
 
 import hr.fer.bookexchangeservice.exception.BookNotFoundException;
+import hr.fer.bookexchangeservice.exception.IsbnAlreadyExistsException;
 import hr.fer.bookexchangeservice.model.entity.Book;
 import hr.fer.bookexchangeservice.repository.BookRepository;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,9 @@ public class BookService {
     }
 
     public Book saveBook(Book book) {
+        if (this.bookRepository.existsByIsbn(book.getIsbn())) {
+            throw new IsbnAlreadyExistsException("ISBN " + book.getIsbn() + " se već koristi");
+        }
         return this.bookRepository.save(book);
     }
 

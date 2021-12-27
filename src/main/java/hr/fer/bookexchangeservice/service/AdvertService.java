@@ -71,10 +71,11 @@ public class AdvertService {
                     aLong)));
             toPrice.ifPresent(aLong -> predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"),
                     aLong)));
-            queryString.ifPresent(s -> predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("title"),
-                            "%" + s + "%"),
-                    criteriaBuilder.like(root.get("description"),
-                            "%" + s + "%"))));
+            queryString.ifPresent(s -> predicates.add(criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder
+                                    .upper(root.get("title")),
+                            "%" + s.toUpperCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.upper(root.get("description")),
+                            "%" + s.toUpperCase() + "%"))));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }

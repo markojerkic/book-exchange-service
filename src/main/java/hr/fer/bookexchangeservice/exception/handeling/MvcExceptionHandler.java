@@ -21,6 +21,12 @@ public class MvcExceptionHandler {
         log.info("Bad credentials", e);
     }
 
+    @ExceptionHandler(IsbnAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleIsbnAlreadyExistsException(HttpServletRequest req, Exception e) {
+        log.info("ISBN already exists", e);
+        return  ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "isbn"));
+    }
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(HttpServletRequest request, Exception e) {
         log.info("Email already exists", e);

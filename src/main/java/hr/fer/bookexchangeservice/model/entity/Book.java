@@ -20,13 +20,13 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     @Column
     @NotNull
     private String title;
     @Column(unique = true)
     @NotNull
-    private String ISBN;
+    private String isbn;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "book")

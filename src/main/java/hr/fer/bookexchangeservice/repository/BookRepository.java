@@ -7,4 +7,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface BookRepository extends PagingAndSortingRepository<Book, Long>, JpaRepository<Book, Long>,
         JpaSpecificationExecutor<Book> {
+    boolean existsByIsbn(String isbn);
 }
