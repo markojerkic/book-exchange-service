@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Locale;
 import java.util.UUID;
 
 @Data
@@ -48,4 +49,10 @@ public class Image {
     @JoinColumn(name = "book_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Book book;
+
+    @JsonIgnore
+    @Transient
+    public String getImageFileName() {
+        return this.uuid.toString() + "." + this.imageFileExtension.name().toLowerCase(Locale.ROOT);
+    }
 }
