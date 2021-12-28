@@ -2,7 +2,9 @@ package hr.fer.bookexchangeservice.service;
 
 import hr.fer.bookexchangeservice.exception.BookNotFoundException;
 import hr.fer.bookexchangeservice.exception.IsbnAlreadyExistsException;
+import hr.fer.bookexchangeservice.model.entity.Author;
 import hr.fer.bookexchangeservice.model.entity.Book;
+import hr.fer.bookexchangeservice.model.entity.Genre;
 import hr.fer.bookexchangeservice.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -72,5 +74,11 @@ public class BookService {
         if (!this.bookRepository.existsById(id)) {
             throw new BookNotFoundException("Knjiga " + id + " nije pronađena");
         }
+    }
+
+    public List<Book> getBooksThatWroteGenre(Long id) {
+        Genre genre = new Genre();
+        genre.setId(id);
+        return this.bookRepository.findBooksByGenresContaining(genre);
     }
 }

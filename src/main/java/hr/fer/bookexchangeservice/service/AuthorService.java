@@ -2,6 +2,7 @@ package hr.fer.bookexchangeservice.service;
 
 import hr.fer.bookexchangeservice.exception.AuthorNotFoundException;
 import hr.fer.bookexchangeservice.model.entity.Author;
+import hr.fer.bookexchangeservice.model.entity.Genre;
 import hr.fer.bookexchangeservice.repository.AuthorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -78,5 +79,11 @@ public class AuthorService {
         if (!this.authorRepository.existsById(id)) {
             throw new AuthorNotFoundException("Autor " + id + " nije pronađen");
         }
+    }
+
+    public List<Author> getAuthorThatWroteGenre(Long genreId) {
+        Genre genre = new Genre();
+        genre.setId(genreId);
+        return this.authorRepository.findAuthorByAuthorsGenresContains(genre);
     }
 }

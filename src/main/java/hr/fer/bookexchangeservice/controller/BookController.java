@@ -1,5 +1,6 @@
 package hr.fer.bookexchangeservice.controller;
 
+import hr.fer.bookexchangeservice.model.entity.Author;
 import hr.fer.bookexchangeservice.model.entity.Book;
 import hr.fer.bookexchangeservice.service.BookService;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,11 @@ public class BookController {
                                       @RequestParam Optional<String> isbn,
                                       @RequestParam Optional<Long> author) {
         return this.bookService.getPagedBooks(pageable, title, isbn, author);
+    }
+
+    @GetMapping("/by-genre/{id}")
+    public List<Book> getBooksByGenreId(@PathVariable Long id) {
+        return this.bookService.getBooksThatWroteGenre(id);
     }
 
     @PostMapping
