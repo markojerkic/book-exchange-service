@@ -32,11 +32,6 @@ public class AuthorController {
         return this.authorService.updateById(id, author);
     }
 
-    @GetMapping("/by-genre/{id}")
-    public List<Author> getAuthorsByGenreId(@PathVariable Long id) {
-        return this.authorService.getAuthorThatWroteGenre(id);
-    }
-
     @GetMapping
     public Page<Author> getPagedAuthors(Pageable pageable, @RequestParam Optional<String> firstName,
                                         @RequestParam Optional<String> lastName,

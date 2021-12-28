@@ -40,11 +40,6 @@ public class BookController {
         return this.bookService.getPagedBooks(pageable, title, isbn, author, genre);
     }
 
-    @GetMapping("/by-genre/{id}")
-    public List<Book> getBooksByGenreId(@PathVariable Long id) {
-        return this.bookService.getBooksThatWroteGenre(id);
-    }
-
     @PostMapping
     public Book saveBook(@RequestBody Book book) {
         return this.bookService.saveBook(book);

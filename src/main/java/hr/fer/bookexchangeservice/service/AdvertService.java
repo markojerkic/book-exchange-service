@@ -56,10 +56,12 @@ public class AdvertService {
                                                            Optional<String> queryString) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            authorId.ifPresent(aLong -> predicates.add(criteriaBuilder.equal(root.get("advertisedBook").get("bookAuthor").get("id"), aLong)));
+            authorId.ifPresent(aLong -> predicates.add(criteriaBuilder.equal(root.get("advertisedBook").get("bookAuthor")
+                    .get("id"), aLong)));
             bookId.ifPresent(aLong -> predicates.add(criteriaBuilder.equal(root.get("advertisedBook").get("id"),
                     aLong)));
-            genreId.ifPresent(aLong -> predicates.add(criteriaBuilder.equal(root.join("advertisedBook").join("genres").join("id"),
+            genreId.ifPresent(aLong -> predicates.add(criteriaBuilder.equal(root.join("advertisedBook")
+                            .join("genres").get("id"),
                     aLong)));
             advertType.ifPresent(type -> predicates.add(criteriaBuilder.equal(root.get("advertType"),
                     type)));
