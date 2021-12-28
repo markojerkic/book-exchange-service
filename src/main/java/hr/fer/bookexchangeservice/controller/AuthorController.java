@@ -41,8 +41,9 @@ public class AuthorController {
     public Page<Author> getPagedAuthors(Pageable pageable, @RequestParam Optional<String> firstName,
                                         @RequestParam Optional<String> lastName,
                                         @RequestParam Optional<Long> yearOfBirth,
-                                        @RequestParam Optional<Long> yearOfDeath) {
-        return this.authorService.getPagedAuthors(pageable, firstName, lastName, yearOfBirth, yearOfDeath);
+                                        @RequestParam Optional<Long> yearOfDeath,
+                                        @RequestParam Optional<Long> genre) {
+        return this.authorService.getPagedAuthors(pageable, firstName, lastName, yearOfBirth, yearOfDeath, genre);
     }
 
     @PostMapping

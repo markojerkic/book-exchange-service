@@ -2,7 +2,6 @@ package hr.fer.bookexchangeservice.service;
 
 import hr.fer.bookexchangeservice.exception.AuthorNotFoundException;
 import hr.fer.bookexchangeservice.model.entity.Author;
-import hr.fer.bookexchangeservice.model.entity.Genre;
 import hr.fer.bookexchangeservice.repository.AuthorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,14 +38,14 @@ public class AuthorService {
 
     public Page<Author> getPagedAuthors(Pageable pageable, Optional<String> firstName,
                                         Optional<String> lastName, Optional<Long> yearOfBirth,
-                                        Optional<Long> yearOfDeath) {
+                                        Optional<Long> yearOfDeath, Optional<Long> genre) {
         return this.authorRepository.findAll(this.createQuerySpecification(firstName, lastName, yearOfBirth,
-                yearOfDeath), pageable);
+                yearOfDeath, genre), pageable);
     }
 
     private Specification<Author> createQuerySpecification(Optional<String> firstName,
                                                            Optional<String> lastName, Optional<Long> yearOfBirth,
-                                                           Optional<Long> yearOfDeath) {
+                                                           Optional<Long> yearOfDeath, Optional<Long> genre) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             firstName.ifPresent(name -> predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("firstName")),
@@ -59,6 +58,8 @@ public class AuthorService {
             yearOfDeath.ifPresent(year -> predicates.add(criteriaBuilder.equal(criteriaBuilder.function("YEAR",
                             Integer.class, root.get("yearOfDeath")),
                     (new Date(year)).toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear())));
+            genre.ifPresent(genreId -> predicates.add(criteriaBuilder.equal(root.join("authorsGenres")
+                    .get("id"), genreId)));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
@@ -79,11 +80,5 @@ public class AuthorService {
         if (!this.authorRepository.existsById(id)) {
             throw new AuthorNotFoundException("Autor " + id + " nije pronađen");
         }
-    }
-
-    public List<Author> getAuthorThatWroteGenre(Long genreId) {
-        Genre genre = new Genre();
-        genre.setId(genreId);
-        return this.authorRepository.findAuthorByAuthorsGenresContains(genre);
     }
 }

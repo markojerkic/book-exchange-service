@@ -2,9 +2,7 @@ package hr.fer.bookexchangeservice.service;
 
 import hr.fer.bookexchangeservice.exception.BookNotFoundException;
 import hr.fer.bookexchangeservice.exception.IsbnAlreadyExistsException;
-import hr.fer.bookexchangeservice.model.entity.Author;
 import hr.fer.bookexchangeservice.model.entity.Book;
-import hr.fer.bookexchangeservice.model.entity.Genre;
 import hr.fer.bookexchangeservice.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,13 +38,15 @@ public class BookService {
         this.bookRepository.deleteById(id);
     }
 
-    public Page<Book> getPagedBooks(Pageable pageable, Optional<String> title, 
-                                    Optional<String> isbn, Optional<Long> author) {
-        return this.bookRepository.findAll(this.createQuerySpecification(title, isbn, author), pageable);
+    public Page<Book> getPagedBooks(Pageable pageable, Optional<String> title,
+                                    Optional<String> isbn, Optional<Long> author, Optional<Long> genre) {
+        return this.bookRepository.findAll(this.createQuerySpecification(title, isbn, author, genre), pageable);
     }
 
     private Specification<Book> createQuerySpecification(Optional<String> title,
-                                                         Optional<String> isbn, Optional<Long> author) {
+                                                         Optional<String> isbn,
+                                                         Optional<Long> author,
+                                                         Optional<Long> genre) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             title.ifPresent(t -> predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("title")),
@@ -55,6 +55,8 @@ public class BookService {
                     "%" + isb.toUpperCase() + "%")));
             author.ifPresent(authorId -> predicates.add(criteriaBuilder.equal(root.get("bookAuthor")
                     .get("id"), authorId)));
+            genre.ifPresent(genreId -> predicates.add(criteriaBuilder.equal(root.join("genres")
+                    .get("id"), genreId)));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
@@ -74,11 +76,5 @@ public class BookService {
         if (!this.bookRepository.existsById(id)) {
             throw new BookNotFoundException("Knjiga " + id + " nije pronađena");
         }
-    }
-
-    public List<Book> getBooksThatWroteGenre(Long id) {
-        Genre genre = new Genre();
-        genre.setId(id);
-        return this.bookRepository.findBooksByGenresContaining(genre);
     }
 }
