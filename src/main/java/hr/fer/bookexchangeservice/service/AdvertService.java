@@ -5,9 +5,11 @@ import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
 import hr.fer.bookexchangeservice.model.constant.TransactionType;
 import hr.fer.bookexchangeservice.model.entity.Advert;
+import hr.fer.bookexchangeservice.model.entity.Image;
 import hr.fer.bookexchangeservice.model.entity.UserDetail;
 import hr.fer.bookexchangeservice.repository.AdvertRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,9 +24,11 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AdvertService {
     private final AdvertRepository advertRepository;
     private final AuthService authService;
+    private final ImageService imageService;
 
     public List<Advert> getAllAdverts() {
         return this.advertRepository.findAll();
@@ -36,7 +40,12 @@ public class AdvertService {
         advert.setAdvertStatus(AdvertStatus.ACTIVE);
         advert.setLastModified(new Date());
 
-        return this.advertRepository.save(advert);
+        Advert savedAdvert = this.advertRepository.save(advert);
+        savedAdvert.getAdvertImages().stream().map(image -> {
+            image.setAdvert(savedAdvert);
+            return (Image) image;
+        }).forEach(this.imageService::updateImage);
+        return savedAdvert;
     }
 
     public Page<Advert> getAdvertPage(Pageable pageable, Optional<Long> authorId, Optional<Long> genreId,

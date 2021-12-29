@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Locale;
@@ -21,7 +20,7 @@ import java.util.UUID;
 public class Image {
 
     @Id
-    @GeneratedValue(generator = "UUID")
+    @GeneratedValue(generator = "UUID", strategy = GenerationType.IDENTITY)
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"

@@ -45,6 +45,12 @@ public class MvcExceptionHandler {
         log.info("Advert does not exist", e);
     }
 
+    @ExceptionHandler(ImageNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleImageNotFound(HttpServletRequest request, Exception e) {
+        log.info("Image does not exist", e);
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "image"));
+    }
+
     @ExceptionHandler(AuthorNotFoundException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Autor nije pronađen")
     public void handleAuthorNotFound(HttpServletRequest request, Exception e) {

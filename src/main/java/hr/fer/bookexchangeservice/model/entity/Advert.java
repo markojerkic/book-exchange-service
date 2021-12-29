@@ -6,19 +6,23 @@ import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
 import hr.fer.bookexchangeservice.model.constant.TransactionType;
 import hr.fer.bookexchangeservice.model.entity.image.AdvertImage;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class Advert {
 
@@ -51,15 +55,30 @@ public class Advert {
     @OneToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
+    @ToString.Exclude
     private UserDetail userCreated;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
+    @ToString.Exclude
     private Book advertisedBook;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.MERGE)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private List<AdvertImage> advertImages;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Advert advert = (Advert) o;
+        return id != null && Objects.equals(id, advert.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

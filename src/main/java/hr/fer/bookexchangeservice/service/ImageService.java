@@ -1,5 +1,6 @@
 package hr.fer.bookexchangeservice.service;
 
+import hr.fer.bookexchangeservice.exception.ImageNotFoundException;
 import hr.fer.bookexchangeservice.model.constant.ImageFileExtension;
 import hr.fer.bookexchangeservice.model.entity.Image;
 import hr.fer.bookexchangeservice.repository.ImageRepository;
@@ -8,15 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +39,10 @@ public class ImageService {
                 throw new IOException();
             }
         }
+    }
+
+    public Image saveImage(Image image) {
+        return this.imageRepository.save(image);
     }
 
     private Image saveImageFile(MultipartFile image) {
@@ -74,5 +77,44 @@ public class ImageService {
             e.printStackTrace();
         }
         return savedImage;
+    }
+
+    public Image getImageByUuid(UUID imageUuid) {
+        return this.imageRepository.findById(imageUuid).orElseThrow(() -> this.imageNotFound(imageUuid));
+    }
+
+    public byte[] getImageFile(Image image) {
+        try {
+            return Files.readAllBytes(this.root.resolve(image.getImageFileName()));
+        } catch (IOException e) {
+            log.error("Image {} not found", this.root.resolve(image.getImageFileName()));
+            throw this.imageNotFound(image);
+        }
+    }
+
+    @Transactional
+    public Image updateImage(Image image) {
+        if (!this.imageRepository.existsById(image.getUuid())) {
+            throw this.imageNotFound(image);
+        }
+        this.imageRepository.deleteById(image.getUuid());
+        Image updatedImage = this.saveImage(image);
+
+        File currentImage = new File(String.valueOf(this.root.resolve(image.getImageFileName())));
+        if (!currentImage.exists() ||
+                !currentImage.renameTo(new File(String.valueOf(this.root
+                        .resolve(updatedImage.getImageFileName()))))) {
+            throw this.imageNotFound(image);
+        }
+
+        return updatedImage;
+    }
+
+    private ImageNotFoundException imageNotFound(Image image) {
+        return new ImageNotFoundException("Slika " + image.getUuid() + " nije pronađena");
+    }
+
+    private ImageNotFoundException imageNotFound(UUID imageUuid) {
+        return new ImageNotFoundException("Slika " + imageUuid + " nije pronađena");
     }
 }
