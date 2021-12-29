@@ -13,6 +13,8 @@ services:
       - DB_HOST=bookdb
       - DB_PORT=5432
       #- CORS_ORIGINS=http://34.89.240.97:443
+    volumes:
+      - /home:/images
     depends_on:
       - bookdb
   book-exchange-front:
