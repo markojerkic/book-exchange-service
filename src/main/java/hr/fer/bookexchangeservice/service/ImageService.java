@@ -28,40 +28,9 @@ public class ImageService {
     private final Path root = Paths.get("images");
 
     public List<Image> saveImages(MultipartFile[] images) {
-        Arrays.stream(images).map(image -> {
-            Image savedImage = new Image();
-            try {
-                String extension = Objects.requireNonNull(image.getOriginalFilename())
-                        .substring(image.getOriginalFilename().lastIndexOf(".") + 1).toLowerCase(Locale.ROOT);
-
-                ImageFileExtension imageFileExtension;
-                switch (extension) {
-                    case "png":
-                        imageFileExtension = ImageFileExtension.PNG;
-                        break;
-                    case "jpeg":
-                        imageFileExtension = ImageFileExtension.JPEG;
-                        break;
-                    case "jpg":
-                        imageFileExtension = ImageFileExtension.JPG;
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + extension);
-                }
-                savedImage.setImageFileExtension(imageFileExtension);
-                savedImage = this.imageRepository.save(savedImage);
-
-                this.createBaseDirIfNotExists();
-
-                Files.copy(image.getInputStream(), this.root.resolve(savedImage.getImageFileName()));
-                log.debug("Image {} saved at {}", savedImage, this.root.toAbsolutePath());
-            } catch (IOException e) {
-                this.imageRepository.delete(savedImage);
-                e.printStackTrace();
-            }
-            return savedImage;
-        }).filter(image -> image.getUuid() != null).collect(Collectors.toList());
-        return null;
+        return Arrays.stream(images).map(this::saveImageFile)
+                .filter(image -> image.getUuid() != null)
+                .collect(Collectors.toList());
     }
 
     private void createBaseDirIfNotExists() throws IOException {
@@ -71,5 +40,39 @@ public class ImageService {
                 throw new IOException();
             }
         }
+    }
+
+    private Image saveImageFile(MultipartFile image) {
+        Image savedImage = new Image();
+        try {
+            String extension = Objects.requireNonNull(image.getOriginalFilename())
+                    .substring(image.getOriginalFilename().lastIndexOf(".") + 1).toLowerCase(Locale.ROOT);
+
+            ImageFileExtension imageFileExtension;
+            switch (extension) {
+                case "png":
+                    imageFileExtension = ImageFileExtension.PNG;
+                    break;
+                case "jpeg":
+                    imageFileExtension = ImageFileExtension.JPEG;
+                    break;
+                case "jpg":
+                    imageFileExtension = ImageFileExtension.JPG;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + extension);
+            }
+            savedImage.setImageFileExtension(imageFileExtension);
+            savedImage = this.imageRepository.save(savedImage);
+
+            this.createBaseDirIfNotExists();
+
+            Files.copy(image.getInputStream(), this.root.resolve(savedImage.getImageFileName()));
+            log.info("{} saved at {}", savedImage, this.root.resolve(savedImage.getImageFileName()));
+        } catch (IOException e) {
+            this.imageRepository.delete(savedImage);
+            e.printStackTrace();
+        }
+        return savedImage;
     }
 }
