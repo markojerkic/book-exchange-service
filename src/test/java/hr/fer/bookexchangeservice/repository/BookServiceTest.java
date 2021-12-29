@@ -44,7 +44,7 @@ public class BookServiceTest {
         Author authorToBeSaved = new Author();
         authorToBeSaved.setId(savedAuthor.getId());
         book.setBookAuthor(authorToBeSaved);
-        book.setISBN("lskdjf");
+        book.setIsbn("lskdjf");
         book.setTitle("Prokleta avlija");
 
         Book savedBook = this.bookService.saveBook(book);

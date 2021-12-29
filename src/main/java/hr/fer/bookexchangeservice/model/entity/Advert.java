@@ -5,6 +5,7 @@ import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
 import hr.fer.bookexchangeservice.model.constant.TransactionType;
+import hr.fer.bookexchangeservice.model.entity.image.AdvertImage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -57,8 +58,8 @@ public class Advert {
     @NotNull
     private Book advertisedBook;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(mappedBy = "advert")
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Image> advertImages;
+    private List<AdvertImage> advertImages;
 
 }

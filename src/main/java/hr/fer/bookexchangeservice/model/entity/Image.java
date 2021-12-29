@@ -7,8 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Locale;
@@ -18,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Image {
 
     @Id
@@ -34,21 +34,6 @@ public class Image {
     @Column
     @NotNull
     private int imageOrder;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Author author;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "advert_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Advert advert;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Book book;
 
     @JsonIgnore
     @Transient

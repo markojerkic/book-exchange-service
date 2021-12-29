@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DataJpaTest
 public class BookTest {
@@ -33,7 +33,7 @@ public class BookTest {
         Author authorToBeSaved = new Author();
         authorToBeSaved.setId(savedAuthor.getId());
         book.setBookAuthor(authorToBeSaved);
-        book.setISBN("lskdjf");
+        book.setIsbn("lskdjf");
         book.setTitle("Prokleta avlija");
 
         Book savedBook = this.bookRepository.save(book);
@@ -54,7 +54,7 @@ public class BookTest {
         Author authorToBeSaved = new Author();
         authorToBeSaved.setId(savedAuthor.getId());
         book.setBookAuthor(authorToBeSaved);
-        book.setISBN("lskdjf");
+        book.setIsbn("lskdjf");
         book.setTitle("Prokleta avlija");
 
         Book savedBook = this.bookRepository.save(book);
