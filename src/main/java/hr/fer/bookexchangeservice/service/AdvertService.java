@@ -7,6 +7,7 @@ import hr.fer.bookexchangeservice.model.constant.TransactionType;
 import hr.fer.bookexchangeservice.model.entity.Advert;
 import hr.fer.bookexchangeservice.model.entity.Image;
 import hr.fer.bookexchangeservice.model.entity.UserDetail;
+import hr.fer.bookexchangeservice.model.entity.image.AdvertImage;
 import hr.fer.bookexchangeservice.repository.AdvertRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
@@ -36,17 +35,48 @@ public class AdvertService {
         return this.advertRepository.findAll();
     }
 
-    public Advert saveAdvert(Advert advert) {
+    private Advert setAdvertInfo(Advert advert) {
         UserDetail userThatCreatedAdvert = this.authService.getCurrentUserDetail();
         advert.setUserCreated(userThatCreatedAdvert);
         advert.setAdvertStatus(AdvertStatus.ACTIVE);
         advert.setLastModified(new Date());
+        return advert;
+    }
 
-        Advert savedAdvert = this.advertRepository.save(advert);
-        savedAdvert.getAdvertImages().stream().map(image -> {
-            image.setAdvert(savedAdvert);
-            return (Image) image;
+    private void updateAdvertImageType(Advert advert) {
+        this.saveAdvertImages(advert, AdvertImage.class);
+    }
+
+    private void updateImageType(Advert advert) {
+        this.saveAdvertImages(advert, Image.class);
+    }
+
+    private void saveAdvertImages(Advert advert, Class<? extends Image> classType) {
+        advert.getAdvertImages().stream().map(image -> {
+            image.setAdvert(advert);
+            return classType.cast(image);
         }).forEach(this.imageService::updateImage);
+    }
+
+    public Advert saveAdvert(Advert advert) {
+        advert = this.setAdvertInfo(advert);
+        Advert savedAdvert = this.advertRepository.save(advert);
+        this.updateImageType(savedAdvert);
+        return savedAdvert;
+    }
+
+    public Advert updateById(Long id, Advert advert) {
+        if (!this.advertRepository.existsById(id)) {
+            throw new AdvertNotFoundException("Oglas " + id + " nije pronađen");
+        }
+
+        advert = this.setAdvertInfo(advert);
+        advert.setId(id);
+        //this.deleteAdvertById(id);
+        //advert.setAdvertImages(null);
+        Advert savedAdvert = this.advertRepository.save(advert);
+        this.updateImageType(advert);
+        //this.imageService.deleteImagesByAdvertId(id);
         return savedAdvert;
     }
 
@@ -97,24 +127,18 @@ public class AdvertService {
         return this.advertRepository.findById(id).orElseThrow(() -> new AdvertNotFoundException("Oglas " + id + " nije pronađen"));
     }
 
-    @Secured("ROLE_ADMIN")
-    public Advert updateById(Long id, Advert advert) {
-        if (!this.advertRepository.existsById(id)) {
-            throw new AdvertNotFoundException("Oglas " + id + " nije pronađen");
-        }
-        advert.setId(id);
-        return this.advertRepository.save(advert);
-    }
-
     public void deleteAdvertById(Long id) {
         Advert advert = this.getAdvertById(id);
         this.assertCurrentUserIsAuthor(advert);
         this.advertRepository.delete(advert);
+        this.imageService.deleteImageFilesByAdvertId(id);
     }
 
     private void assertCurrentUserIsAuthor(Advert advert) {
-        String username = this.authService.getCurrentUserDetail().getUsername();
-        if (advert.getUserCreated().getUsername().equalsIgnoreCase(username)) {
+        String currentUserUsername = this.authService.getCurrentUserDetail().getUsername();
+        String userCreatedUsername = advert.getUserCreated().getUsername();
+        if (!userCreatedUsername.equals(currentUserUsername)) {
+            log.warn("User {} trying to edit/delete advert created by {}", currentUserUsername, userCreatedUsername);
             throw new AccessDeniedException("Forbidden");
         }
     }

@@ -3,6 +3,7 @@ package hr.fer.bookexchangeservice.service;
 import hr.fer.bookexchangeservice.exception.ImageNotFoundException;
 import hr.fer.bookexchangeservice.model.constant.ImageFileExtension;
 import hr.fer.bookexchangeservice.model.entity.Image;
+import hr.fer.bookexchangeservice.repository.AdvertImageRepository;
 import hr.fer.bookexchangeservice.repository.ImageRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ImageService {
     private final ImageRepository imageRepository;
+    private final AdvertImageRepository advertImageRepository;
 
     private final Path root = Paths.get("images");
 
@@ -116,5 +118,35 @@ public class ImageService {
 
     private ImageNotFoundException imageNotFound(UUID imageUuid) {
         return new ImageNotFoundException("Slika " + imageUuid + " nije pronađena");
+    }
+
+    public void deleteImageFilesByAdvertId(Long id) {
+        this.advertImageRepository.findAllByAdvert_Id(id).forEach(image -> {
+            try {
+                Files.delete(this.root.resolve(image.getImageFileName()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        this.advertImageRepository.deleteAllByAdvert_Id(id);
+    }
+
+    @Transactional
+    public void deleteImagesByAdvertId(Long id) {
+        this.advertImageRepository.deleteAllByAdvert_Id(id);
+    }
+
+    public void deleteImageByUUID(UUID uuid) {
+        if (!this.imageRepository.existsById(uuid)) {
+            throw this.imageNotFound(uuid);
+        }
+        this.advertImageRepository.findById(uuid).ifPresent(image -> {
+            try {
+                Files.delete(this.root.resolve(image.getImageFileName()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        this.advertImageRepository.deleteById(uuid);
     }
 }

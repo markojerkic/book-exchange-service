@@ -25,6 +25,11 @@ public class ImageController {
         return this.imageService.saveImages(images);
     }
 
+    @DeleteMapping("{uuid}")
+    public void deleteImage(@PathVariable UUID uuid) {
+        this.imageService.deleteImageByUUID(uuid);
+    }
+
     @GetMapping(value = "/{imageUuid}",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> getFile(@PathVariable UUID imageUuid) {
