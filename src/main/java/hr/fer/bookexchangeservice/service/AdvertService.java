@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
@@ -102,5 +104,18 @@ public class AdvertService {
         }
         advert.setId(id);
         return this.advertRepository.save(advert);
+    }
+
+    public void deleteAdvertById(Long id) {
+        Advert advert = this.getAdvertById(id);
+        this.assertCurrentUserIsAuthor(advert);
+        this.advertRepository.delete(advert);
+    }
+
+    private void assertCurrentUserIsAuthor(Advert advert) {
+        String username = this.authService.getCurrentUserDetail().getUsername();
+        if (advert.getUserCreated().getUsername().equalsIgnoreCase(username)) {
+            throw new AccessDeniedException("Forbidden");
+        }
     }
 }

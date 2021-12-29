@@ -29,6 +29,11 @@ public class AdvertController {
         return this.advertService.getAdvertById(id);
     }
 
+    @DeleteMapping("{id}")
+    public void deleteAdvertById(@PathVariable Long id) {
+        this.advertService.deleteAdvertById(id);
+    }
+
     @PatchMapping("{id}")
     public Advert updateAdvert(@PathVariable Long id, @RequestBody Advert advert) {
         return this.advertService.updateById(id, advert);
