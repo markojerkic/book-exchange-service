@@ -3,7 +3,6 @@ package hr.fer.bookexchangeservice.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
-import hr.fer.bookexchangeservice.model.entity.image.BookImage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,7 +51,7 @@ public class Book {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<BookImage> bookImages;
+    private List<Image> bookImages;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_author_id")

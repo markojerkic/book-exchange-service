@@ -2,7 +2,6 @@ package hr.fer.bookexchangeservice.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
-import hr.fer.bookexchangeservice.model.entity.image.AuthorImage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,7 +37,7 @@ public class Author {
     private List<Review> reviews;
     @OneToMany(mappedBy = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<AuthorImage> authorImages;
+    private List<Image> authorImages;
     @ManyToMany()
     @JoinTable(
             name = "author_wrote_genre",

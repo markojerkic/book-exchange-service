@@ -5,9 +5,7 @@ import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
 import hr.fer.bookexchangeservice.model.constant.TransactionType;
 import hr.fer.bookexchangeservice.model.entity.Advert;
-import hr.fer.bookexchangeservice.model.entity.Image;
 import hr.fer.bookexchangeservice.model.entity.UserDetail;
-import hr.fer.bookexchangeservice.model.entity.image.AdvertImage;
 import hr.fer.bookexchangeservice.repository.AdvertRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,25 +41,14 @@ public class AdvertService {
         return advert;
     }
 
-    private void updateAdvertImageType(Advert advert) {
-        this.saveAdvertImages(advert, AdvertImage.class);
-    }
-
-    private void updateImageType(Advert advert) {
-        this.saveAdvertImages(advert, Image.class);
-    }
-
-    private void saveAdvertImages(Advert advert, Class<? extends Image> classType) {
-        advert.getAdvertImages().stream().map(image -> {
-            image.setAdvert(advert);
-            return classType.cast(image);
-        }).forEach(this.imageService::updateImage);
+    private void saveAdvertImages(Advert advert) {
+        advert.getAdvertImages().stream().peek(image -> image.setAdvert(advert)).forEach(this.imageService::updateImage);
     }
 
     public Advert saveAdvert(Advert advert) {
         advert = this.setAdvertInfo(advert);
         Advert savedAdvert = this.advertRepository.save(advert);
-        this.updateImageType(savedAdvert);
+        this.saveAdvertImages(savedAdvert);
         return savedAdvert;
     }
 
@@ -75,7 +62,7 @@ public class AdvertService {
         //this.deleteAdvertById(id);
         //advert.setAdvertImages(null);
         Advert savedAdvert = this.advertRepository.save(advert);
-        this.updateImageType(advert);
+        this.saveAdvertImages(advert);
         //this.imageService.deleteImagesByAdvertId(id);
         return savedAdvert;
     }

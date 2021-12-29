@@ -5,7 +5,6 @@ import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
 import hr.fer.bookexchangeservice.model.constant.TransactionType;
-import hr.fer.bookexchangeservice.model.entity.image.AdvertImage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -64,7 +63,7 @@ public class Advert {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "advert")
     @ToString.Exclude
-    private List<AdvertImage> advertImages;
+    private List<Image> advertImages;
 
     @Override
     public boolean equals(Object o) {
