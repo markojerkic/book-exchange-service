@@ -65,7 +65,7 @@ public class UserManagementService implements UserDetailsService {
     public UserDetail getUserByUsername(String username) throws UsernameNotFoundException {
         UserDetail user = this.userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Korisnik s korisničkim imenom " + username + " nije pronađen"));
-        this.reviewService.getAverageUserReview(user);
+        this.reviewService.getAverageUserReview(username);
         return user;
     }
 }

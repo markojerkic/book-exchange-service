@@ -1,12 +1,17 @@
 package hr.fer.bookexchangeservice.controller;
 
+import hr.fer.bookexchangeservice.model.constant.ReviewType;
+import hr.fer.bookexchangeservice.model.dto.ReviewDTO;
 import hr.fer.bookexchangeservice.model.entity.*;
 import hr.fer.bookexchangeservice.service.ReviewService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/review")
@@ -42,23 +47,13 @@ public class ReviewController {
         return this.reviewService.addUserReview(review, user);
     }
 
-    @GetMapping("advert/{id}")
-    public List<Review> getAdvertReviews(@PathVariable("id") Advert advert) {
-        return this.reviewService.getAdvertReviews(advert);
-    }
-
-    @GetMapping("author/{id}")
-    public List<Review> getAuthorReviews(@PathVariable("id") Author author) {
-        return this.reviewService.getAuthorReviews(author);
-    }
-
-    @GetMapping("book/{id}")
-    public List<Review> getBookReviews(@PathVariable("id") Book book) {
-        return this.reviewService.getBookReviews(book);
-    }
-
-    @GetMapping("user/{username}")
-    public List<Review> getUserReviews(@PathVariable String username) {
-        return this.reviewService.getUserReviews(username);
+    @GetMapping
+    public ReviewDTO getReviews(@SortDefault(value = "lastModified", direction = Sort.Direction.DESC) Pageable pageable,
+                                @RequestParam ReviewType reviewType,
+                                @RequestParam Optional<Long> bookId,
+                                @RequestParam Optional<Long> authorId,
+                                @RequestParam Optional<Long> advertId,
+                                @RequestParam Optional<String> username) {
+        return this.reviewService.getReviews(pageable, reviewType, bookId, authorId, advertId, username);
     }
 }

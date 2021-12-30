@@ -1,12 +1,16 @@
 package hr.fer.bookexchangeservice.service;
 
+import hr.fer.bookexchangeservice.model.constant.ReviewType;
+import hr.fer.bookexchangeservice.model.dto.ReviewDTO;
 import hr.fer.bookexchangeservice.model.entity.*;
 import hr.fer.bookexchangeservice.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -43,11 +47,11 @@ public class ReviewService {
 
     /**
      * Returns float average of reviews. If no reviews, returns default -1
-     * @param user Instance of User by which query is run.
+     * @param username String unique username of user
      * @return loat average. Default -1 if no reviews.
      */
-    public float getAverageUserReview(UserDetail user) {
-        return this.reviewRepository.averageReviewByUser(user);
+    public float getAverageUserReview(String username) {
+        return this.reviewRepository.averageReviewByUser(username);
     }
 
     public Review addAdvertReview(Review review, Advert advert) {
@@ -74,19 +78,82 @@ public class ReviewService {
         return this.reviewRepository.save(review);
     }
 
-    public List<Review> getAdvertReviews(Advert advert) {
-        return this.reviewRepository.findAllByAdvertOrderByLastModifiedDesc(advert);
+    public Page<Review> getAdvertReviews(Advert advert, Pageable pageable) {
+        return this.reviewRepository.findAllByAdvertOrderByLastModifiedDesc(advert, pageable);
     }
 
-    public List<Review> getBookReviews(Book book) {
-        return this.reviewRepository.findAllByBookOrderByLastModifiedDesc(book);
+    public Page<Review> getBookReviews(Book book, Pageable pageable) {
+        return this.reviewRepository.findAllByBookOrderByLastModifiedDesc(book, pageable);
     }
 
-    public List<Review> getUserReviews(String username) {
-        return this.reviewRepository.findAllByUser_UsernameOrderByLastModifiedDesc(username);
+    public Page<Review> getUserReviews(String username, Pageable pageable) {
+        return this.reviewRepository.findAllByUser_UsernameOrderByLastModifiedDesc(username, pageable);
     }
 
-    public List<Review> getAuthorReviews(Author author) {
-        return this.reviewRepository.findAllByAuthorOrderByLastModifiedDesc(author);
+    public Page<Review> getAuthorReviews(Author author, Pageable pageable) {
+        return this.reviewRepository.findAllByAuthorOrderByLastModifiedDesc(author, pageable);
+    }
+
+    public ReviewDTO getReviews(Pageable pageable, 
+                                ReviewType reviewType, 
+                                Optional<Long> bookId, 
+                                Optional<Long> authorId, 
+                                Optional<Long> advertId,
+                                Optional<String> username) {
+        ReviewDTO reviews = new ReviewDTO();
+        switch (reviewType) {
+            case BOOK:
+                reviews = this.setBookReviews(bookId, pageable);
+                break;
+            case AUTHOR:
+                reviews = this.setAuthorReviews(authorId, pageable);
+                break;
+            case ADVERT:
+                reviews = this.setAdvertReviews(advertId, pageable);
+                break;
+            case USER:
+                reviews = this.setUserReviews(username, pageable);
+                break;
+        }
+        return reviews;
+    }
+
+    private ReviewDTO setBookReviews(Optional<Long> bookId, Pageable pageable) {
+        ReviewDTO reviews = new ReviewDTO();
+        Book book = new Book();
+        book.setId(bookId.orElseThrow(this::throwIllegalArgument));
+        reviews.setReviews(this.getBookReviews(book, pageable));
+        reviews.setAverageReviewGrade(this.getAverageBookReview(book));
+        return reviews;
+    }
+
+    private ReviewDTO setAuthorReviews(Optional<Long> authorId, Pageable pageable) {
+        ReviewDTO reviews = new ReviewDTO();
+        Author author = new Author();
+        author.setId(authorId.orElseThrow(this::throwIllegalArgument));
+        reviews.setReviews(this.getAuthorReviews(author, pageable));
+        reviews.setAverageReviewGrade(this.getAverageAuthorReview(author));
+        return reviews;
+    }
+
+    private ReviewDTO setAdvertReviews(Optional<Long> id, Pageable pageable) {
+        ReviewDTO reviews = new ReviewDTO();
+        Advert advert = new Advert();
+        advert.setId(id.orElseThrow(this::throwIllegalArgument));
+        reviews.setReviews(this.getAdvertReviews(advert, pageable));
+        reviews.setAverageReviewGrade(this.getAverageAdvertReview(advert));
+        return reviews;
+    }
+
+    private ReviewDTO setUserReviews(Optional<String> usernameOpt, Pageable pageable) {
+        ReviewDTO reviews = new ReviewDTO();
+        String username = usernameOpt.orElseThrow(this::throwIllegalArgument);
+        reviews.setReviews(this.getUserReviews(username, pageable));
+        reviews.setAverageReviewGrade(this.getAverageUserReview(username));
+        return reviews;
+    }
+    
+    private IllegalArgumentException throwIllegalArgument() {
+        return new IllegalArgumentException("Krivi argumenti");
     }
 }
