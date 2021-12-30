@@ -2,6 +2,7 @@ package hr.fer.bookexchangeservice.service;
 
 import hr.fer.bookexchangeservice.exception.AuthorNotFoundException;
 import hr.fer.bookexchangeservice.model.entity.Author;
+import hr.fer.bookexchangeservice.model.entity.Image;
 import hr.fer.bookexchangeservice.repository.AuthorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,19 +22,29 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AuthorService {
     private final AuthorRepository authorRepository;
+    private final ImageService imageService;
 
     public List<Author> getAllAuthors() {
         return this.authorRepository.findAll();
     }
 
     public Author saveAuthor(Author author) {
-        return this.authorRepository.save(author);
+        Author savedAuthor = this.authorRepository.save(author);
+        this.saveAuthorImages(author.getAuthorImages(), author.getId());
+        return savedAuthor;
+    }
+
+    private void saveAuthorImages(List<Image> images, Long authorId) {
+        Author author = new Author();
+        author.setId(authorId);
+        images.stream().peek(image -> image.setAuthor(author)).forEach(this.imageService::updateImage);
     }
 
     @Secured("ROLE_ADMIN")
     public void deleteAuthor(Long id) {
         this.assertExists(id);
         this.authorRepository.deleteById(id);
+        this.imageService.deleteImageFilesByAuthorId(id);
     }
 
     public Page<Author> getPagedAuthors(Pageable pageable, Optional<String> firstName,
@@ -73,7 +84,9 @@ public class AuthorService {
     public Author updateById(Long id, Author author) {
         this.assertExists(id);
         author.setId(id);
-        return this.authorRepository.save(author);
+        Author savedAuthor = this.authorRepository.save(author);
+        this.saveAuthorImages(author.getAuthorImages(), author.getId());
+        return savedAuthor;
     }
 
     public void assertExists(Long id) {
