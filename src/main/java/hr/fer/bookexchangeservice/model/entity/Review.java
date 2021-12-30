@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -26,6 +27,9 @@ public class Review {
     @Column
     @NotNull
     private int reviewGrade;
+    @Column
+    @NotNull
+    private Date lastModified;
     @Column
     private String description;
     @JsonIgnore
