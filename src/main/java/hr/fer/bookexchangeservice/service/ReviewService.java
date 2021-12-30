@@ -14,10 +14,6 @@ import java.util.List;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
-    public List<Review> getAuthorReviews(Author author) {
-        return this.reviewRepository.findAllByAuthor(author);
-    }
-
     /**
      * Returns float average of reviews. If no reviews, returns default -1.
      * @param author Instance of author by which query is run.
@@ -76,5 +72,21 @@ public class ReviewService {
 
     private Review addReview(Review review) {
         return this.reviewRepository.save(review);
+    }
+
+    public List<Review> getAdvertReviews(Advert advert) {
+        return this.reviewRepository.findAllByAdvert(advert);
+    }
+
+    public List<Review> getBookReviews(Book book) {
+        return this.reviewRepository.findAllByBook(book);
+    }
+
+    public List<Review> getUserReviews(String username) {
+        return this.reviewRepository.findAllByUser_Username(username);
+    }
+
+    public List<Review> getAuthorReviews(Author author) {
+        return this.reviewRepository.findAllByAuthor(author);
     }
 }
