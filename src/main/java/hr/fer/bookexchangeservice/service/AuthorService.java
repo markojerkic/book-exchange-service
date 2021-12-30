@@ -23,6 +23,7 @@ import java.util.Optional;
 public class AuthorService {
     private final AuthorRepository authorRepository;
     private final ImageService imageService;
+    private final ReviewService reviewService;
 
     public List<Author> getAllAuthors() {
         return this.authorRepository.findAll();
@@ -31,6 +32,7 @@ public class AuthorService {
     public Author saveAuthor(Author author) {
         Author savedAuthor = this.authorRepository.save(author);
         this.saveAuthorImages(author.getAuthorImages(), author.getId());
+        this.setReviewAverage(savedAuthor);
         return savedAuthor;
     }
 
@@ -76,8 +78,10 @@ public class AuthorService {
     }
 
     public Author getAuthorById(Long id) {
-        return this.authorRepository.findById(id)
+        Author author = this.authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Autor " + id + " nije pronađen"));
+        this.setReviewAverage(author);
+        return author;
     }
 
     @Secured("ROLE_ADMIN")
@@ -86,6 +90,7 @@ public class AuthorService {
         author.setId(id);
         Author savedAuthor = this.authorRepository.save(author);
         this.saveAuthorImages(author.getAuthorImages(), author.getId());
+        this.setReviewAverage(savedAuthor);
         return savedAuthor;
     }
 
@@ -93,5 +98,9 @@ public class AuthorService {
         if (!this.authorRepository.existsById(id)) {
             throw new AuthorNotFoundException("Autor " + id + " nije pronađen");
         }
+    }
+
+    private void setReviewAverage(Author author) {
+        author.setReviewAverage(this.reviewService.getAverageAuthorReview(author));
     }
 }

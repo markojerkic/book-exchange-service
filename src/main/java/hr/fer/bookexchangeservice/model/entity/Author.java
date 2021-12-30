@@ -39,10 +39,6 @@ public class Author {
     @OneToMany(mappedBy = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
-    private List<Review> reviews;
-    @OneToMany(mappedBy = "author")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ToString.Exclude
     private List<Image> authorImages;
     @ManyToMany()
     @JoinTable(
@@ -65,6 +61,9 @@ public class Author {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<Book> books;
+
+    @Transient
+    private Float reviewAverage;
 
     @Override
     public boolean equals(Object o) {

@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -22,6 +21,7 @@ public class UserManagementService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReviewService reviewService;
 
     /**
      * Save new user. User's password will be hashed upon saving in database.
@@ -45,7 +45,7 @@ public class UserManagementService implements UserDetailsService {
     }
 
     /**
-     * Searches the database for user with the given username.
+     * Searches the database for user with the given username. Used only for auth filtering.
      *
      * @param username Unique username by which the database is queried
      * @return UserDetails class with data of the user with the given username
@@ -53,8 +53,19 @@ public class UserManagementService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return this.userRepository.findByUsername(username).orElseThrow(() -> {
-            return new UsernameNotFoundException("Korisnik s korisničkim imenom " + username + " nije pronađen");
-        });
+        return this.getUserByUsername(username);
+    }
+
+    /**
+     * Return user with given username. Sets average review. If no reviews, defaults to -1.
+     * @param username Unique username of user.
+     * @return UserDetail object
+     * @throws UsernameNotFoundException
+     */
+    public UserDetail getUserByUsername(String username) throws UsernameNotFoundException {
+        UserDetail user = this.userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("Korisnik s korisničkim imenom " + username + " nije pronađen"));
+        this.reviewService.getAverageUserReview(user);
+        return user;
     }
 }

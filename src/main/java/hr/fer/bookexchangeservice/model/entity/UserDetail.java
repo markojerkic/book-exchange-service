@@ -67,6 +67,9 @@ public class UserDetail implements UserDetails {
     )
     private Set<Role> roles;
 
+    @Transient
+    private Float reviewAverage;
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
