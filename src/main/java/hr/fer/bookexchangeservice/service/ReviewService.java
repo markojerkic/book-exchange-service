@@ -75,18 +75,18 @@ public class ReviewService {
     }
 
     public List<Review> getAdvertReviews(Advert advert) {
-        return this.reviewRepository.findAllByAdvertOrderByLastModified(advert);
+        return this.reviewRepository.findAllByAdvertOrderByLastModifiedDesc(advert);
     }
 
     public List<Review> getBookReviews(Book book) {
-        return this.reviewRepository.findAllByBookOrderByLastModified(book);
+        return this.reviewRepository.findAllByBookOrderByLastModifiedDesc(book);
     }
 
     public List<Review> getUserReviews(String username) {
-        return this.reviewRepository.findAllByUser_UsernameOrderByLastModified(username);
+        return this.reviewRepository.findAllByUser_UsernameOrderByLastModifiedDesc(username);
     }
 
     public List<Review> getAuthorReviews(Author author) {
-        return this.reviewRepository.findAllByAuthorOrderByLastModified(author);
+        return this.reviewRepository.findAllByAuthorOrderByLastModifiedDesc(author);
     }
 }

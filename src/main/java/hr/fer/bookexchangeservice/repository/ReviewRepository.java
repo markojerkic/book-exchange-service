@@ -8,10 +8,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findAllByAuthorOrderByLastModified(Author author);
-    List<Review> findAllByBookOrderByLastModified(Book book);
-    List<Review> findAllByAdvertOrderByLastModified(Advert advert);
-    List<Review> findAllByUser_UsernameOrderByLastModified(String username);
+    List<Review> findAllByAuthorOrderByLastModifiedDesc(Author author);
+    List<Review> findAllByBookOrderByLastModifiedDesc(Book book);
+    List<Review> findAllByAdvertOrderByLastModifiedDesc(Advert advert);
+    List<Review> findAllByUser_UsernameOrderByLastModifiedDesc(String username);
 
     @Query("select coalesce(avg(r.reviewGrade), -1) from Review r where r.author = :author")
     Float averageReviewByAuthor(@Param("author") Author author);
