@@ -119,13 +119,7 @@ public class ImageService {
     }
 
     public void deleteImageFilesByAdvertId(Long id) {
-        this.imageRepository.findAllByAdvert_Id(id).forEach(image -> {
-            try {
-                Files.delete(this.root.resolve(image.getImageFileName()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        this.imageRepository.findAllByAdvert_Id(id).forEach(this::deleteImageFile);
         this.imageRepository.deleteAllByAdvert_Id(id);
     }
 
@@ -138,13 +132,25 @@ public class ImageService {
         if (!this.imageRepository.existsById(uuid)) {
             throw this.imageNotFound(uuid);
         }
-        this.imageRepository.findById(uuid).ifPresent(image -> {
-            try {
-                Files.delete(this.root.resolve(image.getImageFileName()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        this.imageRepository.findById(uuid).ifPresent(this::deleteImageFile);
         this.imageRepository.deleteById(uuid);
+    }
+
+    public void deleteImageFilesByBookId(Long id) {
+        this.imageRepository.findAllByBook_Id(id).forEach(this::deleteImageFile);
+        this.imageRepository.deleteAllByBook_Id(id);
+    }
+
+    public void deleteImageFilesByAuthorId(Long id) {
+        this.imageRepository.findAllByAuthor_Id(id).forEach(this::deleteImageFile);
+        this.imageRepository.deleteAllByAuthor_Id(id);
+    }
+
+    private void deleteImageFile(Image image) {
+        try {
+            Files.delete(this.root.resolve(image.getImageFileName()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

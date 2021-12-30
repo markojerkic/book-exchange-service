@@ -2,19 +2,23 @@ package hr.fer.bookexchangeservice.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class Author {
 
@@ -34,9 +38,11 @@ public class Author {
     private Date yearOfDeath;
     @OneToMany(mappedBy = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private List<Review> reviews;
     @OneToMany(mappedBy = "author")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private List<Image> authorImages;
     @ManyToMany()
     @JoinTable(
@@ -52,9 +58,24 @@ public class Author {
                             foreignKeyDefinition = "foreign key (genre_id) references genre\n" +
                                     "on delete cascade"))
     )
+    @ToString.Exclude
     private List<Genre> authorsGenres;
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "bookAuthor")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private List<Book> books;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Author author = (Author) o;
+        return id != null && Objects.equals(id, author.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

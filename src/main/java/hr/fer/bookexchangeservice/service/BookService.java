@@ -3,6 +3,7 @@ package hr.fer.bookexchangeservice.service;
 import hr.fer.bookexchangeservice.exception.BookNotFoundException;
 import hr.fer.bookexchangeservice.exception.IsbnAlreadyExistsException;
 import hr.fer.bookexchangeservice.model.entity.Book;
+import hr.fer.bookexchangeservice.model.entity.Image;
 import hr.fer.bookexchangeservice.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
+    private final ImageService imageService;
 
     public List<Book> getAllBooks() {
         return this.bookRepository.findAll();
@@ -29,13 +31,22 @@ public class BookService {
         if (this.bookRepository.existsByIsbn(book.getIsbn())) {
             throw new IsbnAlreadyExistsException("ISBN " + book.getIsbn() + " se već koristi");
         }
-        return this.bookRepository.save(book);
+        Book savedBook = this.bookRepository.save(book);
+        this.saveBookImages(book.getBookImages(), book.getId());
+        return savedBook;
+    }
+
+    private void saveBookImages(List<Image> images, Long bookId) {
+        Book book = new Book();
+        book.setId(bookId);
+        images.stream().peek(image -> image.setBook(book)).forEach(this.imageService::updateImage);
     }
 
     @Secured("ROLE_ADMIN")
     public void deleteBook(Long id) {
         this.assertExists(id);
         this.bookRepository.deleteById(id);
+        this.imageService.deleteImageFilesByBookId(id);
     }
 
     public Page<Book> getPagedBooks(Pageable pageable, Optional<String> title,
@@ -69,7 +80,9 @@ public class BookService {
     public Book updateById(Long id, Book book) {
         this.assertExists(id);
         book.setId(id);
-        return this.bookRepository.save(book);
+        Book savedBook = this.bookRepository.save(book);
+        this.saveBookImages(book.getBookImages(), book.getId());
+        return savedBook;
     }
 
     private void assertExists(Long id) {

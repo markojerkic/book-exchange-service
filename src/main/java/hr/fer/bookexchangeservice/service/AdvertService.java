@@ -59,11 +59,8 @@ public class AdvertService {
 
         advert = this.setAdvertInfo(advert);
         advert.setId(id);
-        //this.deleteAdvertById(id);
-        //advert.setAdvertImages(null);
         Advert savedAdvert = this.advertRepository.save(advert);
         this.saveAdvertImages(advert);
-        //this.imageService.deleteImagesByAdvertId(id);
         return savedAdvert;
     }
 
