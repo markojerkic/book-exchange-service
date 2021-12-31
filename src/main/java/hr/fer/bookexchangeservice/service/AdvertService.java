@@ -111,7 +111,6 @@ public class AdvertService {
     public Advert getAdvertById(Long id) {
         Advert advert = this.advertRepository.findById(id).orElseThrow(() ->
                 new AdvertNotFoundException("Oglas " + id + " nije pronađen"));
-        this.setReviewAverage(advert);
         return advert;
     }
 
@@ -129,9 +128,5 @@ public class AdvertService {
             log.warn("User {} trying to edit/delete advert created by {}", currentUserUsername, userCreatedUsername);
             throw new AccessDeniedException("Forbidden");
         }
-    }
-
-    private void setReviewAverage(Advert advert) {
-        advert.setReviewAverage(this.reviewService.getAverageAdvertReview(advert));
     }
 }

@@ -22,7 +22,6 @@ import java.util.Optional;
 public class BookService {
     private final BookRepository bookRepository;
     private final ImageService imageService;
-    private final ReviewService reviewService;
 
     public List<Book> getAllBooks() {
         return this.bookRepository.findAll();
@@ -34,7 +33,6 @@ public class BookService {
         }
         Book savedBook = this.bookRepository.save(book);
         this.saveBookImages(book.getBookImages(), book.getId());
-        this.setReviewAverage(savedBook);
         return savedBook;
     }
 
@@ -77,7 +75,6 @@ public class BookService {
     public Book getBookById(Long id) {
         Book book = this.bookRepository.findById(id).orElseThrow(() ->
                 new BookNotFoundException("Knjiga " + id + " ne postoji"));
-        this.setReviewAverage(book);
         return book;
     }
 
@@ -87,7 +84,6 @@ public class BookService {
         book.setId(id);
         Book savedBook = this.bookRepository.save(book);
         this.saveBookImages(book.getBookImages(), book.getId());
-        this.setReviewAverage(savedBook);
         return savedBook;
     }
 
@@ -95,9 +91,5 @@ public class BookService {
         if (!this.bookRepository.existsById(id)) {
             throw new BookNotFoundException("Knjiga " + id + " nije pronađena");
         }
-    }
-
-    private void setReviewAverage(Book book) {
-        book.setReviewAverage(this.reviewService.getAverageBookReview(book));
     }
 }

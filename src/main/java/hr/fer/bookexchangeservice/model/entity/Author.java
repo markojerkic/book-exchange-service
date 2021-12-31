@@ -62,9 +62,6 @@ public class Author {
     @ToString.Exclude
     private List<Book> books;
 
-    @Transient
-    private Float reviewAverage;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

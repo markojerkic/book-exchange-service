@@ -56,6 +56,10 @@ public class Review {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Advert advert;
+    @ManyToOne()
+    @JoinColumn(name = "user_created_id")
+    @NotNull
+    private UserDetail userCreated;
 
     @Override
     public boolean equals(Object o) {

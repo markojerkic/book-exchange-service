@@ -21,7 +21,6 @@ public class UserManagementService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ReviewService reviewService;
 
     /**
      * Save new user. User's password will be hashed upon saving in database.
@@ -65,7 +64,6 @@ public class UserManagementService implements UserDetailsService {
     public UserDetail getUserByUsername(String username) throws UsernameNotFoundException {
         UserDetail user = this.userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Korisnik s korisničkim imenom " + username + " nije pronađen"));
-        this.reviewService.getAverageUserReview(username);
         return user;
     }
 }

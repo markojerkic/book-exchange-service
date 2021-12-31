@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -17,13 +18,14 @@ import java.util.Optional;
 @Slf4j
 public class ReviewService {
     private final ReviewRepository reviewRepository;
+    private final AuthService authService;
 
     /**
      * Returns float average of reviews. If no reviews, returns default -1.
      * @param author Instance of author by which query is run.
      * @return  Float average. Default -1 if no reviews.
      */
-    public float getAverageAuthorReview(Author author) {
+    private float getAverageAuthorReview(Author author) {
         return this.reviewRepository.averageReviewByAuthor(author);
     }
 
@@ -32,7 +34,7 @@ public class ReviewService {
      * @param book Instance of Book by which query is run
      * @return Float average. Default -1 if no reviews.
      */
-    public float getAverageBookReview(Book book) {
+    private float getAverageBookReview(Book book) {
         return this.reviewRepository.averageReviewByBook(book);
     }
 
@@ -50,7 +52,7 @@ public class ReviewService {
      * @param username String unique username of user
      * @return loat average. Default -1 if no reviews.
      */
-    public float getAverageUserReview(String username) {
+    private float getAverageUserReview(String username) {
         return this.reviewRepository.averageReviewByUser(username);
     }
 
@@ -75,6 +77,8 @@ public class ReviewService {
     }
 
     private Review addReview(Review review) {
+        review.setUserCreated(this.authService.getCurrentUserDetail());
+        review.setLastModified(new Date());
         return this.reviewRepository.save(review);
     }
 

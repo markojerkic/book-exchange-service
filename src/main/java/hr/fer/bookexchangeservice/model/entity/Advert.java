@@ -65,9 +65,6 @@ public class Advert {
     @ToString.Exclude
     private List<Image> advertImages;
 
-    @Transient
-    private Float reviewAverage;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
