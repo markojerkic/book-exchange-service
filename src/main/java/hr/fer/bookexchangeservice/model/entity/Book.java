@@ -54,7 +54,6 @@ public class Book {
     )
     @ToString.Exclude
     private List<Genre> genres;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "book")
     @ToString.Exclude
     private List<Image> bookImages;

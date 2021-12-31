@@ -1,6 +1,5 @@
 package hr.fer.bookexchangeservice.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
@@ -60,7 +59,6 @@ public class Advert {
     @NotNull
     @ToString.Exclude
     private Book advertisedBook;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "advert")
     @ToString.Exclude
     private List<Image> advertImages;

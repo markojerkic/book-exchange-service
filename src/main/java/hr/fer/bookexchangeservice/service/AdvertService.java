@@ -28,7 +28,6 @@ public class AdvertService {
     private final AdvertRepository advertRepository;
     private final AuthService authService;
     private final ImageService imageService;
-    private final ReviewService reviewService;
 
     public List<Advert> getAllAdverts() {
         return this.advertRepository.findAll();
@@ -47,9 +46,10 @@ public class AdvertService {
     }
 
     public Advert saveAdvert(Advert advert) {
-        advert = this.setAdvertInfo(advert);
+        this.setAdvertInfo(advert);
         Advert savedAdvert = this.advertRepository.save(advert);
-        this.saveAdvertImages(savedAdvert);
+        advert.setId(savedAdvert.getId());
+        this.saveAdvertImages(advert);
         return savedAdvert;
     }
 
@@ -58,7 +58,7 @@ public class AdvertService {
             throw new AdvertNotFoundException("Oglas " + id + " nije pronađen");
         }
 
-        advert = this.setAdvertInfo(advert);
+        this.setAdvertInfo(advert);
         advert.setId(id);
         Advert savedAdvert = this.advertRepository.save(advert);
         this.saveAdvertImages(advert);

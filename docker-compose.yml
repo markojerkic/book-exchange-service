@@ -14,7 +14,7 @@ services:
       - DB_PORT=5432
       #- CORS_ORIGINS=http://34.89.240.97:443
     volumes:
-      - /home:/images
+      - service_volume:/home/images
     depends_on:
       - bookdb
   book-exchange-front:
@@ -44,5 +44,6 @@ services:
     restart: always
 volumes:
   dbdata:
+  service_volume:
 networks:
   book-exchange-network:
