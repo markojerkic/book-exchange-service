@@ -17,4 +17,9 @@ public class UserManagementController {
     public UserDetail saveUser(@RequestBody UserDetail user) {
         return this.userManagementService.saveUser(user);
     }
+
+    @GetMapping("{username}")
+    public UserDetail getUserByUsername(@PathVariable String username) {
+        return this.userManagementService.getUserByUsername(username);
+    }
 }

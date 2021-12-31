@@ -16,6 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/review")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class ReviewController {
     private final ReviewService reviewService;
 

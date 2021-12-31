@@ -68,10 +68,11 @@ public class AdvertService {
     public Page<Advert> getAdvertPage(Pageable pageable, Optional<Long> authorId, Optional<Long> genreId,
                                       Optional<Long> bookId, Optional<AdvertType> advertType,
                                       Optional<TransactionType> transactionType, Optional<Long> fromPrice,
-                                      Optional<Long> toPrice, Optional<String> isbn, Optional<String> query) {
+                                      Optional<Long> toPrice, Optional<String> isbn, Optional<String> user,
+                                      Optional<String> query) {
 
         return this.advertRepository.findAll(this.createQuerySpecification(authorId, genreId, bookId,
-                advertType, transactionType, fromPrice, toPrice, isbn, query), pageable);
+                advertType, transactionType, fromPrice, toPrice, isbn, user, query), pageable);
     }
 
     private Specification<Advert> createQuerySpecification(Optional<Long> authorId, Optional<Long> genreId,
@@ -79,6 +80,7 @@ public class AdvertService {
                                                            Optional<TransactionType> transactionType,
                                                            Optional<Long> fromPrice,
                                                            Optional<Long> toPrice, Optional<String> isbn,
+                                                           Optional<String> user,
                                                            Optional<String> queryString) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -99,6 +101,8 @@ public class AdvertService {
                     aLong)));
             toPrice.ifPresent(aLong -> predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"),
                     aLong)));
+            user.ifPresent(username -> predicates.add(criteriaBuilder.equal(root.get("userCreated").get("username"),
+                    username)));
             queryString.ifPresent(s -> predicates.add(criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder
                                     .upper(root.get("title")),
                             "%" + s.toUpperCase() + "%"),

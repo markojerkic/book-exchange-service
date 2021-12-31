@@ -53,9 +53,10 @@ public class AdvertController {
                                       @RequestParam Optional<Long> fromPrice,
                                       @RequestParam Optional<Long> toPrice,
                                       @RequestParam Optional<String> isbn,
+                                      @RequestParam Optional<String> user,
                                       @RequestParam Optional<String> query) {
 
         return this.advertService.getAdvertPage(pageable, authorId, genreId, bookId, advertType, transactionType,
-                fromPrice, toPrice, isbn, query);
+                fromPrice, toPrice, isbn, user, query);
     }
 }
