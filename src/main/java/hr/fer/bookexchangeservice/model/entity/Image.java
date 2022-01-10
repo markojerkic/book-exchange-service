@@ -23,7 +23,7 @@ import java.util.UUID;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Image {
 
     @Id

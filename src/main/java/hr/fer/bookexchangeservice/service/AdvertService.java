@@ -5,6 +5,7 @@ import hr.fer.bookexchangeservice.model.constant.AdvertStatus;
 import hr.fer.bookexchangeservice.model.constant.AdvertType;
 import hr.fer.bookexchangeservice.model.constant.TransactionType;
 import hr.fer.bookexchangeservice.model.entity.Advert;
+import hr.fer.bookexchangeservice.model.entity.Image;
 import hr.fer.bookexchangeservice.model.entity.UserDetail;
 import hr.fer.bookexchangeservice.repository.AdvertRepository;
 import lombok.AllArgsConstructor;
@@ -42,7 +43,10 @@ public class AdvertService {
     }
 
     private void saveAdvertImages(Advert advert) {
-        advert.getAdvertImages().stream().peek(image -> image.setAdvert(advert)).forEach(this.imageService::updateImage);
+        List<Image> images = advert.getAdvertImages();
+        if (images != null) {
+            images.stream().peek(image -> image.setAdvert(advert)).forEach(this.imageService::updateImage);
+        }
     }
 
     public Advert saveAdvert(Advert advert) {

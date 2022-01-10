@@ -39,7 +39,9 @@ public class BookService {
     private void saveBookImages(List<Image> images, Long bookId) {
         Book book = new Book();
         book.setId(bookId);
-        images.stream().peek(image -> image.setBook(book)).forEach(this.imageService::updateImage);
+        if (images != null) {
+            images.stream().peek(image -> image.setBook(book)).forEach(this.imageService::updateImage);
+        }
     }
 
     @Secured("ROLE_ADMIN")

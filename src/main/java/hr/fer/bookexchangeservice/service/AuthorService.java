@@ -37,7 +37,9 @@ public class AuthorService {
     private void saveAuthorImages(List<Image> images, Long authorId) {
         Author author = new Author();
         author.setId(authorId);
-        images.stream().peek(image -> image.setAuthor(author)).forEach(this.imageService::updateImage);
+        if (images != null) {
+            images.stream().peek(image -> image.setAuthor(author)).forEach(this.imageService::updateImage);
+        }
     }
 
     @Secured("ROLE_ADMIN")
